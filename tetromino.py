@@ -226,17 +226,16 @@ class Tetromino:
                if game_grid.is_occupied(rightmost.y, rightmost.x):
                      return False
       # Handling y-axis collisions
-      if False:
-         for col in range(n):
+      for col in range(n):
             for row in range(n - 1, -1, -1):
                # Handling bottom collisions
                bottommost = self.get_cell_position(row, col)
-               if bottommost.y > 0:
+               if bottommost.y < 0:
                      return False
                if game_grid.is_occupied(bottommost.y, bottommost.x):
                      return False
                # Handling upper collisions
-               upmost = self.get_cell_position(n- 1 - row, col)
+               upmost = self.get_cell_position(n - 1 - row, col)
                # There is no need to check upper-side collisions with grid because tetrominos are already moving down.
                # Only checking tetromino-tetromino collisions
                if game_grid.is_occupied(upmost.y, upmost.x):
