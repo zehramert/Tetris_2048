@@ -11,13 +11,15 @@ import os  # the os module is used for file and directory operations
 from game_grid import GameGrid  # the class for modeling the game grid
 from tetromino import Tetromino  # the class for modeling the tetrominoes
 import random  # used for creating tetrominoes with random types (shapes)
+from point import Point  # used for tile positions
+from tile import Tile  # used for modeling each tile on the tetrominoes
 
 # The main function where this program starts execution
 def start():
    # set the dimensions of the game grid
    grid_h, grid_w = 20, 12
    # set the extra part's width right next to the grid
-   extra_w = 5
+   extra_w = 6
    # set the size of the drawing canvas (the displayed window)
    canvas_h, canvas_w = 40 * grid_h, 40 * (grid_w + extra_w)
    stddraw.setCanvasSize(canvas_w, canvas_h)
@@ -111,7 +113,7 @@ def display_game_menu(grid_height, grid_width):
    # compute the path of the image file
    img_file = current_dir + "/images/menu_image.png"
    # the coordinates to display the image centered horizontally
-   img_center_x, img_center_y = (grid_width + 5 - 1) / 2, grid_height - 7 # +5 is extra part's width
+   img_center_x, img_center_y = (grid_width + 6 - 1) / 2, grid_height - 7 # +6 is extra part's width
    # the image is modeled by using the Picture class
    image_to_display = Picture(img_file)
    # add the image to the drawing canvas

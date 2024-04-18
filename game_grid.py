@@ -37,6 +37,9 @@ class GameGrid:
       # (the case when the game grid is updated)
       if self.current_tetromino is not None:
          self.current_tetromino.draw()
+      # Draw the next tetromino next to the game grid if it is not None
+      if self.next_tetromino is not None:
+         self.next_tetromino.draw_outside()
       # draw a box around the game grid
       self.draw_boundaries()
       # show the resulting drawing with a pause duration = 250 ms
