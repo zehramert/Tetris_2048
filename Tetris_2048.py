@@ -16,11 +16,13 @@ import random  # used for creating tetrominoes with random types (shapes)
 def start():
    # set the dimensions of the game grid
    grid_h, grid_w = 20, 12
+   # set the extra part's width right next to the grid
+   extra_w = 5
    # set the size of the drawing canvas (the displayed window)
-   canvas_h, canvas_w = 40 * grid_h, 40 * grid_w
+   canvas_h, canvas_w = 40 * grid_h, 40 * (grid_w + extra_w)
    stddraw.setCanvasSize(canvas_w, canvas_h)
    # set the scale of the coordinate system for the drawing canvas
-   stddraw.setXscale(-0.5, grid_w - 0.5)
+   stddraw.setXscale(-0.5, (grid_w + extra_w) - 0.5)
    stddraw.setYscale(-0.5, grid_h - 0.5)
 
    # set the game grid dimension values stored and used in the Tetromino class
@@ -109,7 +111,7 @@ def display_game_menu(grid_height, grid_width):
    # compute the path of the image file
    img_file = current_dir + "/images/menu_image.png"
    # the coordinates to display the image centered horizontally
-   img_center_x, img_center_y = (grid_width - 1) / 2, grid_height - 7
+   img_center_x, img_center_y = (grid_width + 5 - 1) / 2, grid_height - 7 # +5 is extra part's width
    # the image is modeled by using the Picture class
    image_to_display = Picture(img_file)
    # add the image to the drawing canvas
