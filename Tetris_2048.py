@@ -28,10 +28,11 @@ def start():
    Tetromino.grid_width = grid_w
    # create the game grid
    grid = GameGrid(grid_h, grid_w)
-   # create the first tetromino to enter the game grid
-   # by using the create_tetromino function defined below
+   # Creating the first and next tetromino and assigning them to appropriate variables
    current_tetromino = create_tetromino()
+   next_tetromino = create_tetromino()
    grid.current_tetromino = current_tetromino
+   grid.next_tetromino = next_tetromino
 
    # display a simple menu before opening the game
    # by using the display_game_menu function defined below
@@ -73,10 +74,11 @@ def start():
          # end the main game loop if the game is over
          if game_over:
             break
-         # create the next tetromino to enter the game grid
-         # by using the create_tetromino function defined below
-         current_tetromino = create_tetromino()
+         # Assigning the next tetromino to current tetromino to be able to draw it on the game grid
+         current_tetromino = grid.next_tetromino
          grid.current_tetromino = current_tetromino
+         # Modifying next_tetromino with a new random tetromino
+         grid.next_tetromino = create_tetromino()
 
       # display the game grid with the current tetromino
       grid.display()

@@ -14,6 +14,8 @@ class GameGrid:
       self.tile_matrix = np.full((grid_h, grid_w), None)
       # create the tetromino that is currently being moved on the game grid
       self.current_tetromino = None
+      # create the next tetromino that will be move on the game grid
+      self.next_tetromino = None
       # the game_over flag shows whether the game is over or not
       self.game_over = False
       # set the color used for the empty grid cells
