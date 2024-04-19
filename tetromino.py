@@ -136,13 +136,15 @@ class Tetromino:
                position = self.get_cell_position(row, col)
                # draw only the tiles that are inside the game grid
                if position.y < Tetromino.grid_height:
-                  print(position.x, position.y)
                   self.tile_matrix[row][col].draw(position)
 
    # Method for drawing upcoming tetrominoes on the blank space right next to the game grid
    def draw_outside(self):
       n = len(self.tile_matrix)
-      position_x, position_y = 13.5, 4
+      if (self.type == 'O'):
+         position_x, position_y = 14, 3.5 # Optimizing drawing function for square because it's matrix has only 4 elements.
+      else:
+         position_x, position_y = 13.5, 4
       for row in range(n):
          for col in range(n):
             if self.tile_matrix[row][col] is not None:
