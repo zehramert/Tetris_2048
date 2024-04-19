@@ -19,10 +19,10 @@ class GameGrid:
       # the game_over flag shows whether the game is over or not
       self.game_over = False
       # set the color used for the empty grid cells
-      self.empty_cell_color = Color(42, 69, 99)
+      self.empty_cell_color = Color(206, 195, 181)
       # set the colors used for the grid lines and the grid boundaries
-      self.line_color = Color(0, 100, 200)
-      self.boundary_color = Color(0, 100, 200)
+      self.line_color = Color(187, 173, 160)
+      self.boundary_color = Color(132, 122, 112)
       # thickness values used for the grid lines and the grid boundaries
       self.line_thickness = 0.002
       self.box_thickness = 5 * self.line_thickness
@@ -64,6 +64,11 @@ class GameGrid:
          stddraw.line(x, start_y, x, end_y)
       for y in np.arange(start_y + 1, end_y, 1):  # horizontal inner lines
          stddraw.line(start_x, y, end_x, y)
+
+      stddraw.setFontSize(25)
+      stddraw.setPenColor(Color(255, 255, 255))
+      stddraw.text(14.5, 5.5, "NEXT:")
+
       stddraw.setPenRadius()  # reset the pen radius to its default value
 
    # A method for drawing the boundaries around the game grid
