@@ -148,14 +148,15 @@ def display_game_menu(grid_height, grid_width):
          # get the coordinates of the most recent location at which the mouse
          # has been left-clicked
          mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY()
+         # check if these coordinates are inside the settings button
+         if mouse_x >= s_button_blc_x and mouse_x <= s_button_blc_x + s_button_w:
+            if mouse_y >= s_button_blc_y and mouse_y <= s_button_blc_y + s_button_h:
+               display_settings_menu(grid_height, grid_width) # Opens the settings page
+               break
          # check if these coordinates are inside the start button
          if mouse_x >= button_blc_x and mouse_x <= button_blc_x + button_w:
             if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h:
                break  # break the loop to end the method and start the game
-         # check if these coordinates are inside the settings button
-         if mouse_x >= s_button_blc_x and mouse_x <= s_button_blc_x + s_button_w:
-            if mouse_y >= s_button_blc_y and mouse_y <= s_button_blc_y + s_button_h:
-               display_settings_menu(grid_height, grid_width)  # Opens the settings page
 
 def display_settings_menu(grid_height, grid_width):
    # the colors used for the menu
@@ -171,7 +172,7 @@ def display_settings_menu(grid_height, grid_width):
    stddraw.setPenColor(button_color)
    stddraw.filledRectangle(b_button_blc_x, b_button_blc_y, b_button_w, b_button_h)
    stddraw.setPenColor(text_color)
-   stddraw.text(img_center_x, 2, "Back")
+   stddraw.text(img_center_x, 2, "Start")
    while True:
       # display the menu and wait for a short time (50 ms)
       stddraw.show(50)
@@ -183,7 +184,7 @@ def display_settings_menu(grid_height, grid_width):
          # check if these coordinates are inside the back button
          if mouse_x >= b_button_blc_x and mouse_x <= b_button_blc_x + b_button_w:
             if mouse_y >= b_button_blc_y and mouse_y <= b_button_blc_y + b_button_h:
-               display_game_menu(grid_height, grid_width)
+               break
 
 # Checks each row if they are completely filled with tiles and returns each row in an array
 # If a row is completely filled, it takes True value; otherwise, False
