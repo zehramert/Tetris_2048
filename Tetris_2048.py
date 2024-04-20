@@ -375,10 +375,29 @@ def apply_merge(grid):
                    grid.score += grid.tile_matrix[x][y].number
                    grid.tile_matrix[x + 1][y].number = None
                    grid.tile_matrix[x + 1][y] = None
-                   x += 1
                    merged  = True
+                   updateColor(grid.tile_matrix[x][y],grid.tile_matrix[x][y].number)
+                   x += 1
              x += 1
       return merged
+def updateColor(tile, num):
+   colors = {
+         2: (238, 228, 218),  # lightgray
+         4: (237, 224, 200),  # lightblue
+         8: (242, 177, 121),  # orange
+         16: (245, 149, 99),  # coral
+         32: (246, 124, 95),  # red
+         64: (246, 94, 59),  # purple
+         128: (237, 207, 114),  # green
+         256: (237, 204, 97),  # blue
+         512: (237, 200, 80),  # etc.
+         1024: (237, 197, 63),
+         2048: (237, 194, 46),
+      }
+   if num in colors:
+      color = colors[num]
+      tile.background_color = Color(color[0], color[1], color[2])
+      tile.foreground_color = Color(138, 129, 120)
 
 def connected_component_labeling(grid, grid_width, grid_height):
    # First, all pixels in the image are initialized as 0
