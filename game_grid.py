@@ -50,8 +50,13 @@ class GameGrid:
          self.next_tetromino.draw_outside()
       # draw a box around the game grid
       self.draw_boundaries()
-      # show the resulting drawing with a pause duration = 250 ms
-      stddraw.show(250)
+      # show the resulting drawing with a pause duration according to difficulty level
+      if (self.player.getDiff() == 0):
+         stddraw.show(250)
+      if (self.player.getDiff() == 1):
+         stddraw.show(200)
+      if (self.player.getDiff() == 2):
+         stddraw.show(125)
 
    # A method for drawing the cells and the lines of the game grid
    def draw_grid(self):
