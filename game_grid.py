@@ -2,12 +2,16 @@ import lib.stddraw as stddraw  # used for displaying the game grid
 from lib.color import Color  # used for coloring the game grid
 from point import Point  # used for tile positions
 import numpy as np  # fundamental Python module for scientific computing
-import copy
+import copy as cp
+from player import Player
 
 # A class for modeling the game grid
 class GameGrid:
    # A constructor for creating the game grid based on the given arguments
    def __init__(self, grid_h, grid_w):
+      # Create player
+      self.player = Player()
+      # Initialize score
       self.score = 0
       # set the dimensions of the game grid as the given arguments
       self.grid_height = grid_h
@@ -157,7 +161,7 @@ class GameGrid:
       for row in range(self.grid_height):  # does not contain the bottommost row
          for col in range(self.grid_width):
             if free_tiles[row][col]:
-               free_tile_copy = copy.deepcopy(self.tile_matrix[row][col])
+               free_tile_copy = cp.deepcopy(self.tile_matrix[row][col])
                self.tile_matrix[row - 1][col] = free_tile_copy
                dx, dy = 0, -1  # change of the position in x and y directions
                self.tile_matrix[row - 1][col].move(dx, dy)
@@ -169,6 +173,8 @@ class GameGrid:
       stddraw.setPenColor(Color(255, 255, 255))
       text_to_display = "SCORE: " + str(self.score)
       stddraw.text(14.5, 16.5, text_to_display)
+      high_score_text = "HIGH SCORE: " + str(self.player.getHighScore())
+      stddraw.text(14.5, 13.5, high_score_text)
 
       # return the value of the game_over flag
       return self.game_over
