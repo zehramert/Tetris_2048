@@ -1,23 +1,34 @@
 import lib.stddraw as stddraw  # used for drawing the tiles to display them
 from lib.color import Color  # used for coloring the tiles
+import random as rd
 
 # A class for modeling numbered tiles as in 2048
 class Tile:
    # Class variables shared among all Tile objects
    # ---------------------------------------------------------------------------
    # the value of the boundary thickness (for the boxes around the tiles)
-   boundary_thickness = 0.004
+   boundary_thickness = 0.002
    # font family and font size used for displaying the tile number
    font_family, font_size = "Arial", 14
 
-   # A constructor that creates a tile with 2 as the number on it
+   # A constructor that creates a tile with 2 or 4 (with 50% probability) as the number on it
    def __init__(self):
       # set the number on this tile
-      self.number = 2
+      if (rd.random() < 0.5):
+         self.number = 2
+      else:
+         self.number = 4
       # set the colors of this tile
-      self.background_color = Color(151, 178, 199)  # background (tile) color
-      self.foreground_color = Color(0, 100, 200)  # foreground (number) color
-      self.box_color = Color(0, 100, 200)  # box (boundary) color
+      if (self.number == 2):
+         self.background_color = Color(238, 228, 218) # background (tile) color
+         self.foreground_color = Color(138, 129, 120)  # foreground (number) color
+      elif (self.number == 4):
+         self.background_color = Color(236, 224, 200)
+         self.foreground_color = Color(138, 129, 120)
+      else:
+         self.background_color = Color(236, 224, 200)
+         self.foreground_color = Color(138, 129, 120)
+      self.box_color = Color(156, 146, 136) # box (boundary) color
 
    # A method for drawing this tile at a given position with a given length
    def draw(self, position, length=1):  # length defaults to 1
@@ -34,3 +45,12 @@ class Tile:
       stddraw.setFontFamily(Tile.font_family)
       stddraw.setFontSize(Tile.font_size)
       stddraw.text(position.x, position.y, str(self.number))
+
+   # Setter for number property
+   def setNumber(self, number):
+      self.number = number
+      # Numara değiştirildiğinde background_color ve foreground_color değişkenlerinin de değiştirilmesi gerekiyor bu metod içinde.
+
+   # Getter for number property
+   def getNumber(self):
+      return self.number

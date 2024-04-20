@@ -12,6 +12,7 @@ class Tetromino:
    # A constructor for creating a tetromino with a given shape (type)
    def __init__(self, shape):
       self.type = shape  # set the type of this tetromino
+      self.rotate_count = 0
       # determine the occupied (non-empty) cells in the tile matrix based on
       # the shape of this tetromino (see the documentation given with this code)
       occupied_cells = []
@@ -36,6 +37,34 @@ class Tetromino:
          occupied_cells.append((1, 1))
          occupied_cells.append((1, 2))
          occupied_cells.append((2, 2))
+      elif self.type == 'L':
+         n = 3  # n = number of rows = number of columns in the tile matrix
+         # shape of the tetromino L in its initial rotation state
+         occupied_cells.append((1, 0))  # (column_index, row_index)
+         occupied_cells.append((1, 1))
+         occupied_cells.append((1, 2))
+         occupied_cells.append((2, 2))
+      elif self.type == 'J': # Represents reverse L
+         n = 3  # n = number of rows = number of columns in the tile matrix
+         # shape of the tetromino reverse L in its initial rotation state
+         occupied_cells.append((1, 0))  # (column_index, row_index)
+         occupied_cells.append((1, 1))
+         occupied_cells.append((1, 2))
+         occupied_cells.append((0, 2))
+      elif self.type == 'S': # Respresents reverse Z
+         n = 3  # n = number of rows = number of columns in the tile matrix
+         # shape of the tetromino reverse Z in its initial rotation state
+         occupied_cells.append((2, 1))  # (column_index, row_index)
+         occupied_cells.append((1, 1))
+         occupied_cells.append((1, 2))
+         occupied_cells.append((0, 2))
+      elif self.type == 'T':
+         n = 3  # n = number of rows = number of columns in the tile matrix
+         # shape of the tetromino T in its initial rotation state
+         occupied_cells.append((0, 1))  # (column_index, row_index)
+         occupied_cells.append((1, 1))
+         occupied_cells.append((2, 1))
+         occupied_cells.append((1, 2))
       # create a matrix of numbered tiles based on the shape of this tetromino
       self.tile_matrix = np.full((n, n), None)
       # create the four tiles (minos) of this tetromino and place these tiles
@@ -109,6 +138,20 @@ class Tetromino:
                if position.y < Tetromino.grid_height:
                   self.tile_matrix[row][col].draw(position)
 
+   # Method for drawing upcoming tetrominoes on the blank space right next to the game grid
+   def draw_outside(self):
+      n = len(self.tile_matrix)
+      if (self.type == 'O'):
+         position_x, position_y = 14, 3.5 # Optimizing drawing function for square because it's matrix has only 4 elements.
+      else:
+         position_x, position_y = 13.5, 4
+      for row in range(n):
+         for col in range(n):
+            if self.tile_matrix[row][col] is not None:
+                  # Get the position for each tile relative to the provided position
+                  tile_position = Point(position_x + col, position_y - row)
+                  self.tile_matrix[row][col].draw(tile_position)
+
    # A method for moving this tetromino in a given direction by 1 on the grid
    def move(self, direction, game_grid):
       # check if this tetromino can be moved in the given direction by using
@@ -175,3 +218,54 @@ class Tetromino:
                   break  # end the inner for loop
       # if this method does not end by returning False before this line
       return True  # this tetromino can be moved in the given direction
+
+   # A method to check a tetromino can be rotated or not.
+   def can_be_rotated(self, game_grid):
+      n = len(self.tile_matrix)
+      # Handling x-axis collisions
+      for row_index in range(n):
+            for col_index in range(n):
+               # Handling left-side collisions
+               row, col = row_index, col_index
+               leftmost = self.get_cell_position(row, col)
+               if leftmost.x < 0:
+                  return False
+               if game_grid.is_occupied(leftmost.y, leftmost.x):
+                     return False
+               # Handling right-side collisions
+               row, col = row_index, n - 1 - col_index
+               rightmost = self.get_cell_position(row, col)
+               if rightmost.x > Tetromino.grid_width - 1:
+                     return False
+               if game_grid.is_occupied(rightmost.y, rightmost.x):
+                     return False
+      # Handling y-axis collisions
+      for col in range(n):
+            for row in range(n - 1, -1, -1):
+               # Handling bottom collisions
+               bottommost = self.get_cell_position(row, col)
+               if bottommost.y < 0:
+                     return False
+               if game_grid.is_occupied(bottommost.y, bottommost.x):
+                     return False
+               # Handling upper collisions
+               upmost = self.get_cell_position(n - 1 - row, col)
+               # There is no need to check upper-side collisions with grid because tetrominos are already moving down.
+               # Only checking tetromino-tetromino collisions
+               if game_grid.is_occupied(upmost.y, upmost.x):
+                     return False
+      return True
+
+   # A method to rotate a tetromino
+   def rotate(self, game_grid): # Rotates the tetromino once by clock-wise.
+      if (self.can_be_rotated(game_grid)):
+         n = len(self.tile_matrix)
+         # Rotating the shape clock-wise by 90 degrees
+         self.tile_matrix = np.flip(np.transpose(self.tile_matrix), axis=1)
+         # Handling rotate count
+         if (self.rotate_count == 3):
+            self.rotate_count = 0
+         else:
+            self.rotate_count += 1
+
+
