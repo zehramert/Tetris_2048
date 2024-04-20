@@ -147,10 +147,42 @@ def display_game_menu(grid_height, grid_width):
          # get the coordinates of the most recent location at which the mouse
          # has been left-clicked
          mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY()
-         # check if these coordinates are inside the button
+         # check if these coordinates are inside the start button
          if mouse_x >= button_blc_x and mouse_x <= button_blc_x + button_w:
             if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h:
                break  # break the loop to end the method and start the game
+         # check if these coordinates are inside the settings button
+         if mouse_x >= s_button_blc_x and mouse_x <= s_button_blc_x + s_button_w:
+            if mouse_y >= s_button_blc_y and mouse_y <= s_button_blc_y + s_button_h:
+               display_settings_menu(grid_height, grid_width)  # Opens the settings page
+
+def display_settings_menu(grid_height, grid_width):
+   # the colors used for the menu
+   background_color = Color(42, 69, 99)
+   button_color = Color(25, 255, 228)
+   text_color = Color(31, 160, 239)
+   # clear the background drawing canvas to background_color
+   stddraw.clear(background_color)
+   img_center_x, img_center_y = (grid_width + 6 - 1) / 2, grid_height - 7 # +6 is extra part's width
+   # Back Button
+   b_button_w, b_button_h = 2, 2
+   b_button_blc_x, b_button_blc_y = img_center_x - b_button_w / 2, 1
+   stddraw.setPenColor(button_color)
+   stddraw.filledRectangle(b_button_blc_x, b_button_blc_y, b_button_w, b_button_h)
+   stddraw.setPenColor(text_color)
+   stddraw.text(img_center_x, 2, "Back")
+   while True:
+      # display the menu and wait for a short time (50 ms)
+      stddraw.show(50)
+      # check if the mouse has been left-clicked on the start game button
+      if stddraw.mousePressed():
+         # get the coordinates of the most recent location at which the mouse
+         # has been left-clicked
+         mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY()
+         # check if these coordinates are inside the back button
+         if mouse_x >= b_button_blc_x and mouse_x <= b_button_blc_x + b_button_w:
+            if mouse_y >= b_button_blc_y and mouse_y <= b_button_blc_y + b_button_h:
+               display_game_menu(grid_height, grid_width)
 
 # Checks each row if they are completely filled with tiles and returns each row in an array
 # If a row is completely filled, it takes True value; otherwise, False
