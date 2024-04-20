@@ -88,6 +88,11 @@ def start():
       # display the game grid with the current tetromino
       grid.display()
 
+   # Updating high score
+   if (grid.score > grid.player.getHighScore()):
+      grid.player.setHighScore(grid.score)
+   # Updates save file
+   grid.player.updateOnClose()
    # print a message on the console when the game is over
    print("Game over")
 

@@ -55,3 +55,20 @@ class Player:
 
     def turnMusicOff(self):
         self.music_on = False
+
+    # Writes changed settings into the file
+    def updateOnClose(self):
+        # get the directory in which this python code file is placed
+        current_dir = os.path.dirname(os.path.realpath(__file__))
+        # compute the path of the image file
+        save_file_location = current_dir + "/save/save.save"
+        # Import values to save file from Player object
+        save_file = open(save_file_location, "w")
+        save_file.write(str(self.difficulty) + "\n")
+        save_file.write(str(self.high_score) + "\n")
+        save_file.write(str(self.volume) + "\n")
+        if (self.music_on):
+            save_file.write("1")
+        else:
+            save_file.write("0")
+        save_file.close()
