@@ -99,8 +99,38 @@ def start():
          # Modifying next_tetromino with a new random tetromino
          grid.next_tetromino = create_tetromino()
 
+         # Keep row information if they are completely filled or not
+         row_count = is_full(grid.grid_height, grid.grid_width, grid)
+         index = 0
+         # Shift down the rows
+         while index < grid.grid_height:
+            while row_count[index]:
+               shift_down(row_count, grid)
+               row_count = is_full(grid.grid_height, grid.grid_width, grid)
+            index += 1
 
+         # Assign labels to each tile using 4-component labeling
+         labels, num_labels = connected_component_labeling(grid.tile_matrix, grid.grid_width, grid.grid_height)
+         # Find free tiles and drop down the ones not connected to others
+         free_tiles = [[False for v in range(grid.grid_width)] for b in range(grid.grid_height)]
+         free_tiles, num_free = search_free_tiles(grid.grid_height, grid.grid_width, labels, free_tiles)
+         grid.move_free_tiles(free_tiles)
 
+         # Drops down tiles that don't connect any other tiles until there is no tile to drop down
+         while num_free != 0:
+            labels, num_labels = connected_component_labeling(grid.tile_matrix, grid.grid_width, grid.grid_height)
+            free_tiles = [[False for v in range(grid.grid_width)] for b in range(grid.grid_height)]
+            free_tiles, num_free = search_free_tiles(grid.grid_height, grid.grid_width, labels, free_tiles)
+            grid.move_free_tiles(free_tiles)
+
+         labels, num_labels = connected_component_labeling(grid.tile_matrix, grid.grid_width, grid.grid_height)
+
+         grid.clear_tiles()
+         # Assigning the next tetromino to current tetromino to be able to draw it on the game grid
+         current_tetromino = grid.next_tetromino
+         grid.current_tetromino = current_tetromino
+         # Modifying next_tetromino with a new random tetromino
+         grid.next_tetromino = create_tetromino()
 
       # display the game grid with the current tetromino
       grid.display()
@@ -304,6 +334,18 @@ def is_full(grid_h, grid_w, grid):
    grid.score += score
    return row_count
 
+# Moves each tile by one unit down if it is available
+def shift_down(row_count, grid):
+   for index, i in enumerate(row_count):
+      if i:
+         for a in range(index, 19):
+            row = np.copy(grid.tile_matrix[a + 1])
+            grid.tile_matrix[a] = row
+            for b in range(12):
+               if grid.tile_matrix[a][b] is not None:
+                  grid.tile_matrix[a][b].move(0, -1)
+         break
+
 # Searches and finds tiles which do not connect to others
 def search_free_tiles(grid_h, grid_w, labels, free_tiles):
    counter = 0
@@ -338,6 +380,83 @@ def apply_merge(grid):
              x += 1
       return merged
 
+def connected_component_labeling(grid, grid_width, grid_height):
+   # First, all pixels in the image are initialized as 0
+   labels = np.zeros([grid_height, grid_width], dtype=int)
+   # A list to store the minimum equivalent label for each label.
+   min_equivalent_labels = []
+   # Labeling starts from 1 (0 represents the background of the image).
+   current_label = 1
+
+   # Assign initial labels and determine minimum equivalent labels for each pixel in the given binary image.
+   for y in range(grid_height):
+      for x in range(grid_width):
+         if grid[y, x] is None:
+            continue
+         neighbor_labels = get_neighbor_labels(labels, (x, y))
+         if len(neighbor_labels) == 0:
+            labels[y, x] = current_label
+            current_label += 1
+            min_equivalent_labels.append(labels[y, x])
+         else:
+            labels[y, x] = min(neighbor_labels)
+            if len(neighbor_labels) > 1:
+               labels_to_merge = set()
+               for l in neighbor_labels:
+                  labels_to_merge.add(min_equivalent_labels[l - 1])
+               update_min_equivalent_labels(min_equivalent_labels, labels_to_merge)
+
+   # Rearrange equivalent labels so they all have consecutive values.
+   rearrange_min_equivalent_labels(min_equivalent_labels)
+
+   # Assign the minimum equivalent label of each pixel as its own label.
+   for y in range(grid_height):
+      for x in range(grid_width):
+         if grid[y, x] is None:
+            continue
+         labels[y, x] = min_equivalent_labels[labels[y, x] - 1]
+
+   # Return the labels matrix and the number of different labels.
+   return labels, len(set(min_equivalent_labels))
+
+
+# Function to get labels of the neighbors of a given pixel.
+def get_neighbor_labels(label_values, pixel_indices):
+   x, y = pixel_indices
+   neighbor_labels = set()
+   if y != 0 and label_values[y - 1, x] != 0:
+      neighbor_labels.add(label_values[y - 1, x])
+   if x != 0 and label_values[y, x - 1] != 0:
+      neighbor_labels.add(label_values[y, x - 1])
+   return neighbor_labels
+
+
+# Function to update minimum equivalent labels by merging conflicting neighbor labels as the smallest value among their min equivalent labels.
+def update_min_equivalent_labels(all_min_eq_labels, min_eq_labels_to_merge):
+   min_value = min(min_eq_labels_to_merge)
+   for index in range(len(all_min_eq_labels)):
+      if all_min_eq_labels[index] in min_eq_labels_to_merge:
+         all_min_eq_labels[index] = min_value
+
+
+# Function to rearrange minimum equivalent labels so they all have consecutive values starting from 1.
+def rearrange_min_equivalent_labels(min_equivalent_labels):
+   # find different values of min equivalent labels and sort them in increasing order
+   different_labels = set(min_equivalent_labels)
+   different_labels_sorted = sorted(different_labels)
+   # create an array for storing new (consecutive) values for min equivalent labels
+   new_labels = np.zeros(max(min_equivalent_labels) + 1, dtype=int)
+   count = 1  # first label value to assign
+   # for each different label value (sorted in increasing order)
+   for l in different_labels_sorted:
+      # determine the new label
+      new_labels[l] = count
+      count += 1  # increase count by 1 so that new label values are consecutive
+   # assign new values of each minimum equivalent label
+   for ind in range(len(min_equivalent_labels)):
+      old_label = min_equivalent_labels[ind]
+      new_label = new_labels[old_label]
+      min_equivalent_labels[ind] = new_label
 
 
 # start() function is specified as the entry point (main function) from which
