@@ -220,6 +220,20 @@ def search_free_tiles(grid_h, grid_w, labels, free_tiles):
                   counter += 1
    return free_tiles, counter
 
+def calculate_merging(grid_h, grid_w):
+   merged = False
+   for x in range(grid_h):
+      for y in range(grid_w):
+         if grid.tile_matrix[x][y] != None and grid.tile_matrix[x+1][y] != None:
+            if grid.tile_matrix[x][y].number == grid.tile_matrix[x + 1][y].number:
+               # Merge the tiles
+               grid.tile_matrix[x][y].number += grid.tile_matrix[x + 1][y].number
+               grid.score += grid.tile_matrix[x][y].number
+               grid.tile_matrix[x+1][y].number = None
+               merged = True
+
+   return merged
+
 
 # start() function is specified as the entry point (main function) from which
 # the program starts execution
