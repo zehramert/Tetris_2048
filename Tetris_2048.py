@@ -4,14 +4,17 @@
 #                                                                              #
 ################################################################################
 
+
 import lib.stddraw as stddraw  # for creating an animation with user interactions
+import tile
 from lib.picture import Picture  # used for displaying an image on the game menu
 from lib.color import Color  # used for coloring the game menu
 import os  # the os module is used for file and directory operations
 from game_grid import GameGrid  # the class for modeling the game grid
 from tetromino import Tetromino  # the class for modeling the tetrominoes
 import random  # used for creating tetrominoes with random types (shapes)
-from point import Point  # used for tile positions
+import numpy as np
+from point import Point # used for tile positions
 from tile import Tile  # used for modeling each tile on the tetrominoes
 
 # The main function where this program starts execution
@@ -69,6 +72,8 @@ def start():
       # move the active tetromino down by one at each iteration (auto fall)
       success = current_tetromino.move("down", grid)
       # lock the active tetromino onto the grid when it cannot go down anymore
+
+
       if not success:
          # get the tile matrix of the tetromino without empty rows and columns
          # and the position of the bottom left cell in this matrix
@@ -76,8 +81,17 @@ def start():
          # update the game grid by locking the tiles of the landed tetromino
          game_over = grid.update_grid(tiles, pos)
          # end the main game loop if the game is over
+
+
+
          if game_over:
             break
+
+
+         merge = apply_merge(grid)
+         if merge == True:
+            print("merge applied")
+
          grid.clear_tiles()
          # Assigning the next tetromino to current tetromino to be able to draw it on the game grid
          current_tetromino = grid.next_tetromino
@@ -85,8 +99,12 @@ def start():
          # Modifying next_tetromino with a new random tetromino
          grid.next_tetromino = create_tetromino()
 
+
+
+
       # display the game grid with the current tetromino
       grid.display()
+
 
    # Updating high score
    if (grid.score > grid.player.getHighScore()):
@@ -95,6 +113,7 @@ def start():
    grid.player.updateOnClose()
    # print a message on the console when the game is over
    print("Game over")
+
 
 # A function for creating random shaped tetrominoes to enter the game grid
 def create_tetromino():
@@ -226,22 +245,29 @@ def search_free_tiles(grid_h, grid_w, labels, free_tiles):
                   counter += 1
    return free_tiles, counter
 
-def calculate_merging(grid_h, grid_w):
-   merged = False
-   for x in range(grid_h):
-      for y in range(grid_w):
-         if grid.tile_matrix[x][y] != None and grid.tile_matrix[x+1][y] != None:
-            if grid.tile_matrix[x][y].number == grid.tile_matrix[x + 1][y].number:
-               # Merge the tiles
-               grid.tile_matrix[x][y].number += grid.tile_matrix[x + 1][y].number
-               grid.score += grid.tile_matrix[x][y].number
-               grid.tile_matrix[x+1][y].number = None
-               merged = True
+def apply_merge(grid):
+      height = len(grid.tile_matrix)
+      width = len(grid.tile_matrix[0])
+      merged = False
 
-   return merged
+      for y  in range(width):
+          x = 0
+          while x < height -1 :
+             if grid.tile_matrix[x][y] != None and grid.tile_matrix[x + 1][y] != None:
+                if grid.tile_matrix[x][y].number == grid.tile_matrix[x + 1][y].number:
+                   # Merge the tiles
+                   grid.tile_matrix[x][y].number += grid.tile_matrix[x + 1][y].number
+                   grid.score += grid.tile_matrix[x][y].number
+                   grid.tile_matrix[x + 1][y].number = None
+                   x += 1
+                   merged  = True
+             x += 1
+      return merged
+
 
 
 # start() function is specified as the entry point (main function) from which
 # the program starts execution
+
 if __name__ == '__main__':
    start()

@@ -30,6 +30,8 @@ class Tile:
          self.foreground_color = Color(138, 129, 120)
       self.box_color = Color(156, 146, 136) # box (boundary) color
 
+
+
    # A method for drawing this tile at a given position with a given length
    def draw(self, position, length=1):  # length defaults to 1
       # draw the tile as a filled square
@@ -47,6 +49,10 @@ class Tile:
       stddraw.text(position.x, position.y, str(self.number))
 
    # Setter for number property
+
+
+
+
    def setNumber(self, number):
       self.number = number
       # Numara değiştirildiğinde background_color ve foreground_color değişkenlerinin de değiştirilmesi gerekiyor bu metod içinde.
