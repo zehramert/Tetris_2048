@@ -19,6 +19,8 @@ class Tile:
       else:
          self.number = 4
       # set the colors of this tile
+
+
       if (self.number == 2):
          self.background_color = Color(238, 228, 218) # background (tile) color
          self.foreground_color = Color(138, 129, 120)  # foreground (number) color
@@ -29,6 +31,9 @@ class Tile:
          self.background_color = Color(236, 224, 200)
          self.foreground_color = Color(138, 129, 120)
       self.box_color = Color(156, 146, 136) # box (boundary) color
+
+
+
 
 
 
