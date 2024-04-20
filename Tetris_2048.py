@@ -132,6 +132,13 @@ def display_game_menu(grid_height, grid_width):
    stddraw.setPenColor(text_color)
    text_to_display = "Click Here to Start the Game"
    stddraw.text(img_center_x, 5, text_to_display)
+   # Settings Button
+   s_button_w, s_button_h = 2, 2
+   s_button_blc_x, s_button_blc_y = img_center_x - s_button_w / 2, 1
+   stddraw.setPenColor(button_color)
+   stddraw.filledRectangle(s_button_blc_x, s_button_blc_y, s_button_w, s_button_h)
+   stddraw.setPenColor(text_color)
+   stddraw.text(img_center_x, 2, "Settings")
    # the user interaction loop for the simple menu
    while True:
       # display the menu and wait for a short time (50 ms)
