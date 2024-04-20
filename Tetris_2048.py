@@ -78,6 +78,7 @@ def start():
          # end the main game loop if the game is over
          if game_over:
             break
+         grid.clear_tiles()
          # Assigning the next tetromino to current tetromino to be able to draw it on the game grid
          current_tetromino = grid.next_tetromino
          grid.current_tetromino = current_tetromino

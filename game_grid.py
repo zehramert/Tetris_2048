@@ -8,6 +8,7 @@ import copy
 class GameGrid:
    # A constructor for creating the game grid based on the given arguments
    def __init__(self, grid_h, grid_w):
+      self.score = 0
       # set the dimensions of the game grid as the given arguments
       self.grid_height = grid_h
       self.grid_width = grid_w
@@ -127,6 +128,30 @@ class GameGrid:
                else:
                   self.game_over = True
 
+   def clear_tiles(self):
+      row = 0
+      total_score = 0
+      while (row < self.grid_height):
+         # check if the row is full
+         if all(self.tile_matrix[row]):
+            total_score += sum(element.number for element in self.tile_matrix[row])
+            # remove the row from the game grid
+            self.tile_matrix = np.delete(self.tile_matrix, row, 0)
+            # add an empty row to the game grid
+            self.tile_matrix = np.insert(self.tile_matrix, -1, None, 0)
+         else:
+            row += 1
+      self.score += total_score
+
+   # draws the ghost tetromino on the game grid
+   def ghost_tetromino(self):
+      # the ghost tetromino is the same as the current tetromino, but with a
+      # different color
+      ghost_tetromino = cp.deepcopy(self.current_tetromino)
+      while ghost_tetromino.can_be_moved("down", self):
+         ghost_tetromino.move("down", self)
+      ghost_tetromino.draw(True)
+
    # Takes list of free tiles and moves them one row down
    def move_free_tiles(self, free_tiles):
       for row in range(self.grid_height):  # does not contain the bottommost row
@@ -139,11 +164,11 @@ class GameGrid:
                self.tile_matrix[row][col] = None
 
    # Displays the score on the top right of the main game screen
-   def display_Score(self, score=0):
+   def display_Score(self):
       stddraw.setPenRadius(150)
-      stddraw.setPenColor(Color(255, 0, 0))
-      text_to_display = "SCORE: " + str(score)
-      stddraw.text(15.8, 18.8, text_to_display)
+      stddraw.setPenColor(Color(255, 255, 255))
+      text_to_display = "SCORE: " + str(self.score)
+      stddraw.text(14.5, 16.5, text_to_display)
 
       # return the value of the game_over flag
       return self.game_over
