@@ -115,17 +115,17 @@ class GameGrid:
          return False
       return True
 
-   # A method that locks the tiles of a landed tetromino on the grid checking
-   # if the game is over due to having any tile above the topmost grid row.
-   # (This method returns True when the game is over and False otherwise.)
+   # Method that locks the tiles of the landed tetromino on the game grid while
+   # checking if the game is over due to having tiles above the topmost grid row.
+   # The method returns True when the game is over and False otherwise.
    def update_grid(self, tiles_to_lock, blc_position):
       # necessary for the display method to stop displaying the tetromino
       self.current_tetromino = None
-      # lock the tiles of the current tetromino (tiles_to_lock) on the grid
+      # lock the tiles of the current tetromino (tiles_to_lock) on the game grid
       n_rows, n_cols = len(tiles_to_lock), len(tiles_to_lock[0])
       for col in range(n_cols):
          for row in range(n_rows):
-            # place each tile (occupied cell) onto the game grid
+            # place each tile onto the game grid
             if tiles_to_lock[row][col] is not None:
                # compute the position of the tile on the game grid
                pos = Point()
@@ -136,6 +136,8 @@ class GameGrid:
                # the game is over if any placed tile is above the game grid
                else:
                   self.game_over = True
+      # return the game_over flag
+      return self.game_over
 
    def clear_tiles(self):
       row = 0
