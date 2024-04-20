@@ -2,6 +2,7 @@ import lib.stddraw as stddraw  # used for displaying the game grid
 from lib.color import Color  # used for coloring the game grid
 from point import Point  # used for tile positions
 import numpy as np  # fundamental Python module for scientific computing
+import copy
 
 # A class for modeling the game grid
 class GameGrid:
@@ -33,6 +34,8 @@ class GameGrid:
       stddraw.clear(self.empty_cell_color)
       # draw the game grid
       self.draw_grid()
+      # draw the score
+      self.display_Score()
       # draw the current/active tetromino if it is not None
       # (the case when the game grid is updated)
       if self.current_tetromino is not None:
@@ -123,5 +126,24 @@ class GameGrid:
                # the game is over if any placed tile is above the game grid
                else:
                   self.game_over = True
+
+   # Takes list of free tiles and moves them one row down
+   def move_free_tiles(self, free_tiles):
+      for row in range(self.grid_height):  # does not contain the bottommost row
+         for col in range(self.grid_width):
+            if free_tiles[row][col]:
+               free_tile_copy = copy.deepcopy(self.tile_matrix[row][col])
+               self.tile_matrix[row - 1][col] = free_tile_copy
+               dx, dy = 0, -1  # change of the position in x and y directions
+               self.tile_matrix[row - 1][col].move(dx, dy)
+               self.tile_matrix[row][col] = None
+
+   # Displays the score on the top right of the main game screen
+   def display_Score(self, score=0):
+      stddraw.setPenRadius(150)
+      stddraw.setPenColor(Color(255, 0, 0))
+      text_to_display = "SCORE: " + str(score)
+      stddraw.text(15.8, 18.8, text_to_display)
+
       # return the value of the game_over flag
       return self.game_over

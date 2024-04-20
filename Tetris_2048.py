@@ -145,6 +145,41 @@ def display_game_menu(grid_height, grid_width):
             if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h:
                break  # break the loop to end the method and start the game
 
+# Checks each row if they are completely filled with tiles and returns each row in an array
+# If a row is completely filled, it takes True value; otherwise, False
+def is_full(grid_h, grid_w, grid):
+   # Creates an array with all False values, with size equal to the number of rows in the game grid
+   row_count = [False for _ in range(grid_h)]
+   # If a row is full, this score variable keeps the total score which will come from this full row
+   score = 0
+   for h in range(grid_h):
+      # Keeps track of the total number of tiles inside the same row; if counter == grid_w, the row is full
+      counter = 0
+      for w in range(grid_w):
+         if grid.is_occupied(h, w):
+            counter += 1
+         # If the row is full, calculates the total score in this row
+         if counter == grid_w:
+            score = sum(grid.tile_matrix[h][a].number for a in range(grid_w))
+            row_count[h] = True
+   # Updates the total score
+   grid.score += score
+   return row_count
+
+# Searches and finds tiles which do not connect to others
+def search_free_tiles(grid_h, grid_w, labels, free_tiles):
+   counter = 0
+   ready_labels = []
+   for x in range(grid_h):
+      for y in range(grid_w):
+         if labels[x, y] != 1 and labels[x, y] != 0:
+            if x == 0:
+               ready_labels.append(labels[x, y])
+               if not ready_labels.count(labels[x, y]):
+                  free_tiles[x][y] = True
+                  counter += 1
+   return free_tiles, counter
+
 
 # start() function is specified as the entry point (main function) from which
 # the program starts execution
