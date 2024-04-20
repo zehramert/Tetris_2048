@@ -43,7 +43,7 @@ def start():
 
    # display a simple menu before opening the game
    # by using the display_game_menu function defined below
-   display_game_menu(grid_h, grid_w)
+   display_game_menu(grid_h, grid_w, grid.player)
 
    # the main game loop
    while True:
@@ -106,10 +106,10 @@ def start():
       grid.display()
 
 
-   # Updating high score
+   # Updating high score after game is over
    if (grid.score > grid.player.getHighScore()):
       grid.player.setHighScore(grid.score)
-   # Updates save file
+   # Updating save file
    grid.player.updateOnClose()
    # print a message on the console when the game is over
    print("Game over")
@@ -126,7 +126,7 @@ def create_tetromino():
    return tetromino
 
 # A function for displaying a simple menu before starting the game
-def display_game_menu(grid_height, grid_width):
+def display_game_menu(grid_height, grid_width, player):
    # the colors used for the menu
    background_color = Color(42, 69, 99)
    button_color = Color(25, 255, 228)
@@ -175,40 +175,113 @@ def display_game_menu(grid_height, grid_width):
          # check if these coordinates are inside the settings button
          if mouse_x >= s_button_blc_x and mouse_x <= s_button_blc_x + s_button_w:
             if mouse_y >= s_button_blc_y and mouse_y <= s_button_blc_y + s_button_h:
-               display_settings_menu(grid_height, grid_width) # Opens the settings page
+               display_settings_menu(grid_height, grid_width, player) # Opens the settings page
                break
          # check if these coordinates are inside the start button
          if mouse_x >= button_blc_x and mouse_x <= button_blc_x + button_w:
             if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h:
                break  # break the loop to end the method and start the game
 
-def display_settings_menu(grid_height, grid_width):
+# A function for displaying a settings menu before starting the game
+def display_settings_menu(grid_height, grid_width, player):
    # the colors used for the menu
    background_color = Color(42, 69, 99)
    button_color = Color(25, 255, 228)
    text_color = Color(31, 160, 239)
-   # clear the background drawing canvas to background_color
-   stddraw.clear(background_color)
-   img_center_x, img_center_y = (grid_width + 6 - 1) / 2, grid_height - 7 # +6 is extra part's width
-   # Back Button
-   b_button_w, b_button_h = 2, 2
-   b_button_blc_x, b_button_blc_y = img_center_x - b_button_w / 2, 1
-   stddraw.setPenColor(button_color)
-   stddraw.filledRectangle(b_button_blc_x, b_button_blc_y, b_button_w, b_button_h)
-   stddraw.setPenColor(text_color)
-   stddraw.text(img_center_x, 2, "Start")
    while True:
-      # display the menu and wait for a short time (50 ms)
-      stddraw.show(50)
-      # check if the mouse has been left-clicked on the start game button
+      # clear the background drawing canvas to background_color
+      stddraw.clear(background_color)
+      img_center_x, img_center_y = (grid_width + 6 - 1) / 2, grid_height - 7 # +6 is extra part's width
+      # Volume Text
+      stddraw.setPenColor(Color(0, 0, 0))
+      stddraw.text(img_center_x - 6, 15, "Music Volume")
+      # Increase Button
+      stddraw.setPenColor(button_color)
+      stddraw.filledRectangle(img_center_x + 7, 14.7, 0.5, 0.5)
+      stddraw.setPenColor(Color(0, 0, 0))
+      stddraw.text(img_center_x + 7.25, 15, "+")
+      # Decrease Button
+      stddraw.setPenColor(button_color)
+      stddraw.filledRectangle(img_center_x + 5, 14.7, 0.5, 0.5)
+      stddraw.setPenColor(Color(0, 0, 0))
+      stddraw.text(img_center_x + 5.25, 15, "-")
+      # Music Text
+      stddraw.text(img_center_x - 6, 13, "Music")
+      # Difficulty Text
+      stddraw.text(img_center_x - 6, 11, "Difficulty")
+      # Difficulty Level Text
+      difficulty_level_text = ""
+      if player.getDiff() == 0:
+         difficulty_level_text = "Easy"
+      elif player.getDiff() == 1:
+         difficulty_level_text = "Normal"
+      elif player.getDiff() == 2:
+         difficulty_level_text = "Hard"
+      stddraw.setPenColor(button_color)
+      stddraw.text(img_center_x + 6.2, 11, difficulty_level_text)
+      # Difficulty Right
+      stddraw.setPenColor(button_color)
+      stddraw.filledRectangle(img_center_x + 7.5, 10.7, 0.5, 0.5)
+      stddraw.setPenColor(Color(0, 0, 0))
+      stddraw.text(img_center_x + 7.75, 11, "->")
+      # Difficulty Left
+      stddraw.setPenColor(button_color)
+      stddraw.filledRectangle(img_center_x + 4.5, 10.7, 0.5, 0.5)
+      stddraw.setPenColor(Color(0, 0, 0))
+      stddraw.text(img_center_x + 4.75, 11, "<-")
+      # Back Button
+      b_button_w, b_button_h = 2, 2
+      b_button_blc_x, b_button_blc_y = img_center_x - b_button_w / 2, 1
+      stddraw.setPenColor(button_color)
+      stddraw.filledRectangle(b_button_blc_x, b_button_blc_y, b_button_w, b_button_h)
+      stddraw.setPenColor(text_color)
+      stddraw.text(img_center_x, 2, "Start")
+      # Music On-Off Button
+      if (player.getMusicCondition()):
+         stddraw.setPenColor(Color(9, 255, 0))
+      else:
+         stddraw.setPenColor(Color(255, 0, 42))
+      stddraw.filledRectangle(img_center_x + 6, 12.7, 0.5, 0.5)
+      # Music Volume
+      stddraw.setPenColor(button_color)
+      stddraw.text(img_center_x + 6.2, 15, str(player.getVolume()))
+      # check if the mouse has been left-clicked on the any button
       if stddraw.mousePressed():
          # get the coordinates of the most recent location at which the mouse
          # has been left-clicked
          mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY()
+         # check if these coordinates are inside the music volume increase button
+         if mouse_x >= img_center_x + 7 and mouse_x <= img_center_x + 7 + 2:
+            if mouse_y >= 14 and mouse_y <= 15.3:
+               player.increaseVolume(5)
+         # check if these coordinates are inside the music volume decrease button
+         if mouse_x >= img_center_x + 5 and mouse_x <= img_center_x + 6:
+            if mouse_y >= 14 and mouse_y <= 15.3:
+               player.decreaseVolume(5)
+         # check if these coordinates are inside the difficulty right button
+         if mouse_x >= img_center_x + 7.5 and mouse_x <= img_center_x + 8:
+            if mouse_y >= 10 and mouse_y <= 11:
+               if (player.getDiff() <= 1):
+                  player.setDiff(player.getDiff() + 1)
+         # check if these coordinates are inside the difficulty left button
+         if mouse_x >= img_center_x + 4.5 and mouse_x <= img_center_x + 5:
+            if mouse_y >= 10 and mouse_y <= 11:
+               if (player.getDiff() >= 1):
+                  player.setDiff(player.getDiff() - 1)
+         # check if these coordinates are inside the music on-off button
+         if mouse_x >= img_center_x + 6 and mouse_x <= img_center_x + 6 + 2:
+            if mouse_y >= 12 and mouse_y <= 14:
+               if (player.getMusicCondition()):
+                  player.turnMusicOff()
+               else:
+                  player.turnMusicOn()
          # check if these coordinates are inside the back button
          if mouse_x >= b_button_blc_x and mouse_x <= b_button_blc_x + b_button_w:
             if mouse_y >= b_button_blc_y and mouse_y <= b_button_blc_y + b_button_h:
                break
+      # display the menu and wait for a short time (50 ms)
+      stddraw.show(50)
+   player.updateOnClose()
 
 # Checks each row if they are completely filled with tiles and returns each row in an array
 # If a row is completely filled, it takes True value; otherwise, False

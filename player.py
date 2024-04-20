@@ -50,6 +50,17 @@ class Player:
         if (number >= 0 and number <= 100):
             self.volume = number
 
+    def increaseVolume(self, number=1):
+        if (self.volume + number <= 100):
+            self.volume += number
+
+    def decreaseVolume(self, number=1):
+        if (self.volume - number >= 0):
+            self.volume -= number
+
+    def getMusicCondition(self):
+        return self.music_on
+
     def turnMusicOn(self):
         self.music_on = True
 
