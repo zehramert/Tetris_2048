@@ -332,6 +332,7 @@ def apply_merge(grid):
                    grid.tile_matrix[x][y].number += grid.tile_matrix[x + 1][y].number
                    grid.score += grid.tile_matrix[x][y].number
                    grid.tile_matrix[x + 1][y].number = None
+                   grid.tile_matrix[x + 1][y] = None
                    x += 1
                    merged  = True
              x += 1
