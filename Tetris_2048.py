@@ -147,7 +147,7 @@ def start():
    # Updating save file
    grid.player.updateOnClose()
    # print a message on the console when the game is over
-   print("Game over")
+   display_game_over_menu(grid_h, grid_w, grid.player, grid)
 
 
 # A function for creating random shaped tetrominoes to enter the game grid
@@ -317,6 +317,60 @@ def display_settings_menu(grid_height, grid_width, player):
       # display the menu and wait for a short time (50 ms)
       stddraw.show(50)
    player.updateOnClose()
+
+def display_game_over_menu(grid_height, grid_width, player, grid):
+   # the colors used for the menu
+   background_color = Color(42, 69, 99)
+   button_color = Color(25, 255, 228)
+   text_color = Color(31, 160, 239)
+   while True:
+      # clear the background drawing canvas to background_color
+      stddraw.clear(background_color)
+      img_center_x, img_center_y = (grid_width + 6 - 1) / 2, grid_height - 7 # +6 is extra part's width
+      # Changing Font Size for Game Over and Score Texts
+      stddraw.setFontSize(70)
+      # Game Over Text
+      stddraw.setPenColor(Color(255, 255, 255))
+      stddraw.text(img_center_x, 15, "GAME OVER")
+      # Score Text
+      stddraw.setPenColor(Color(255, 255, 255))
+      stddraw.text(img_center_x, 12, "SCORE: " + str(grid.score))
+      # Changing Font Size for Button Texts
+      stddraw.setFontSize(35)
+      # Restart Button
+      stddraw.setPenColor(button_color)
+      stddraw.filledRectangle(img_center_x - 7, 3, 4, 2)
+      stddraw.setPenColor(Color(0, 0, 0))
+      stddraw.text(img_center_x - 5, 4, "Restart")
+      # Main Menu Button
+      stddraw.setPenColor(button_color)
+      stddraw.filledRectangle(img_center_x - 2, 3, 4, 2)
+      stddraw.setPenColor(Color(0, 0, 0))
+      stddraw.text(img_center_x, 4, "Main Menu")
+      # Settings Button
+      stddraw.setPenColor(button_color)
+      stddraw.filledRectangle(img_center_x + 3, 3, 4, 2)
+      stddraw.setPenColor(Color(0, 0, 0))
+      stddraw.text(img_center_x + 5, 4, "Settings")
+      # check if the mouse has been left-clicked on the any button
+      if stddraw.mousePressed():
+         # get the coordinates of the most recent location at which the mouse
+         # has been left-clicked
+         mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY()
+         # check if these coordinates are inside the restart button
+         if mouse_x >= img_center_x - 7 and mouse_x <= img_center_x -3:
+            if mouse_y >= 3 and mouse_y <= 5:
+               print("pressed")
+         # check if these coordinates are inside the main menu button
+         if mouse_x >= img_center_x -2 and mouse_x <= img_center_x + 2:
+            if mouse_y >= 3 and mouse_y <= 5:
+               print("main menu")
+         # check if these coordinates are inside the settings button
+         if mouse_x >= img_center_x + 3 and mouse_x <= img_center_x + 7:
+            if mouse_y >= 3 and mouse_y <= 5:
+               print("settings")
+      # display the menu and wait for a short time (50 ms)
+      stddraw.show(50)
 
 # Checks each row if they are completely filled with tiles and returns each row in an array
 # If a row is completely filled, it takes True value; otherwise, False
