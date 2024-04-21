@@ -37,8 +37,7 @@ def start():
    grid = GameGrid(grid_h, grid_w)
    # display a simple menu before opening the game
    # by using the display_game_menu function defined below
-   display_game_menu(grid_h, grid_w, grid.player)
-   update(grid)
+   display_game_menu(grid)
 
 def update(grid):
    # Resetting grid
@@ -125,13 +124,7 @@ def update(grid):
             grid.move_free_tiles(free_tiles)
 
          labels, num_labels = connected_component_labeling(grid.tile_matrix, grid.grid_width, grid.grid_height)
-
          grid.clear_tiles()
-         # Assigning the next tetromino to current tetromino to be able to draw it on the game grid
-         current_tetromino = grid.next_tetromino
-         grid.current_tetromino = current_tetromino
-         # Modifying next_tetromino with a new random tetromino
-         grid.next_tetromino = create_tetromino()
 
       # display the game grid with the current tetromino
       grid.display()
@@ -142,7 +135,7 @@ def update(grid):
    # Updating save file
    grid.player.updateOnClose()
    # print a message on the console when the game is over
-   display_game_over_menu(grid.grid_height, grid.grid_width, grid)
+   display_game_over_menu(grid)
 
 
 # A function for creating random shaped tetrominoes to enter the game grid
@@ -156,7 +149,11 @@ def create_tetromino():
    return tetromino
 
 # A function for displaying a simple menu before starting the game
-def display_game_menu(grid_height, grid_width, player):
+def display_game_menu(grid):
+   # Initializing height, weight and player variables
+   grid_height = grid.grid_height
+   grid_width = grid.grid_width
+   player = grid.player
    # the colors used for the menu
    background_color = Color(42, 69, 99)
    button_color = Color(25, 255, 228)
@@ -205,15 +202,19 @@ def display_game_menu(grid_height, grid_width, player):
          # check if these coordinates are inside the settings button
          if mouse_x >= s_button_blc_x and mouse_x <= s_button_blc_x + s_button_w:
             if mouse_y >= s_button_blc_y and mouse_y <= s_button_blc_y + s_button_h:
-               display_settings_menu(grid_height, grid_width, player) # Opens the settings page
-               break
+               display_settings_menu(grid) # Opens the settings page
+               display_settings_menu(grid)
          # check if these coordinates are inside the start button
          if mouse_x >= button_blc_x and mouse_x <= button_blc_x + button_w:
             if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h:
-               break  # break the loop to end the method and start the game
+               update(grid)  # break the loop to end the method and start the game
 
 # A function for displaying a settings menu before starting the game
-def display_settings_menu(grid_height, grid_width, player):
+def display_settings_menu(grid):
+   # Initializing height, weight and player variables
+   grid_height = grid.grid_height
+   grid_width = grid.grid_width
+   player = grid.player
    # the colors used for the menu
    background_color = Color(42, 69, 99)
    button_color = Color(25, 255, 228)
@@ -305,15 +306,18 @@ def display_settings_menu(grid_height, grid_width, player):
                   player.turnMusicOff()
                else:
                   player.turnMusicOn()
-         # check if these coordinates are inside the back button
+         # check if these coordinates are inside the start button
          if mouse_x >= b_button_blc_x and mouse_x <= b_button_blc_x + b_button_w:
             if mouse_y >= b_button_blc_y and mouse_y <= b_button_blc_y + b_button_h:
-               break
+               player.updateOnClose()
+               update(grid)
       # display the menu and wait for a short time (50 ms)
       stddraw.show(50)
-   player.updateOnClose()
 
-def display_game_over_menu(grid_height, grid_width, grid):
+def display_game_over_menu(grid):
+   # Initializing height, weight and player variables
+   grid_height = grid.grid_height
+   grid_width = grid.grid_width
    # the colors used for the menu
    background_color = Color(42, 69, 99)
    button_color = Color(25, 255, 228)
@@ -330,6 +334,14 @@ def display_game_over_menu(grid_height, grid_width, grid):
       # Score Text
       stddraw.setPenColor(Color(255, 255, 255))
       stddraw.text(img_center_x, 12, "SCORE: " + str(grid.score))
+      if grid.score < 2048:
+         stddraw.setPenColor(Color(255, 255, 255))
+         stddraw.setFontSize(40)
+         stddraw.text(img_center_x, 10, "YOU LOSE!")
+      elif grid.score >= 2048:
+         stddraw.setPenColor(Color(255, 255, 255))
+         stddraw.setFontSize(40)
+         stddraw.text(img_center_x, 10, "YOU WIN!")
       # Changing Font Size for Button Texts
       stddraw.setFontSize(35)
       # Restart Button
@@ -359,11 +371,11 @@ def display_game_over_menu(grid_height, grid_width, grid):
          # check if these coordinates are inside the main menu button
          if mouse_x >= img_center_x -2 and mouse_x <= img_center_x + 2:
             if mouse_y >= 3 and mouse_y <= 5:
-               print("main menu")
+               display_game_menu(grid)
          # check if these coordinates are inside the settings button
          if mouse_x >= img_center_x + 3 and mouse_x <= img_center_x + 7:
             if mouse_y >= 3 and mouse_y <= 5:
-               print("settings")
+               display_settings_menu(grid)
       # display the menu and wait for a short time (50 ms)
       stddraw.show(50)
 
