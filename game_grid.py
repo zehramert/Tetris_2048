@@ -41,6 +41,9 @@ class GameGrid:
       self.draw_grid()
       # draw the score
       self.display_Score()
+
+
+
       # draw the current/active tetromino if it is not None
       # (the case when the game grid is updated)
       if self.current_tetromino is not None:
@@ -59,6 +62,7 @@ class GameGrid:
          stddraw.show(125)
 
    # A method for drawing the cells and the lines of the game grid
+
    def draw_grid(self):
       # for each cell of the game grid
       for row in range(self.grid_height):
@@ -185,8 +189,3 @@ class GameGrid:
 
       # return the value of the game_over flag
       return self.game_over
-
-
-
-
-
