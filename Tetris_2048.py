@@ -78,6 +78,10 @@ def update(grid):
 
       # move the active tetromino down by one at each iteration (auto fall)
       success = current_tetromino.move("down", grid)
+      game_over = grid.game_over
+
+      if game_over:
+         break
 
       # lock the active tetromino onto the grid when it cannot go down anymore
       if not success:

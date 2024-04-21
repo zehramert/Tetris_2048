@@ -277,7 +277,7 @@ class GameGrid:
             if (exit_button_center_x - button_width / 2 <= mouse_x <= exit_button_center_x + button_width / 2) and \
                  (exit_button_center_y - button_height / 2 <= mouse_y <= exit_button_center_y + button_height / 2):
                self.game_over = True  # Set the game to end
-               break 
+               break
 
 
 
