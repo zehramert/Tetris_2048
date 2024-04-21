@@ -33,6 +33,7 @@ class GameGrid:
       self.line_thickness = 0.002
       self.box_thickness = 5 * self.line_thickness
 
+
    # A method for displaying the game grid
    def display(self):
       # clear the background to empty_cell_color
@@ -41,6 +42,26 @@ class GameGrid:
       self.draw_grid()
       # draw the score
       self.display_Score()
+
+      # Pause Game button
+      button_width = 2
+      button_height = 1
+      button_x = 13.5
+      button_y = 10.5
+      button_color = Color(237, 224, 200)
+      stddraw.setPenColor(button_color)
+      stddraw.filledRectangle(button_x, button_y, button_width, button_height)
+      stddraw.setPenColor(Color(255, 255, 255))
+      stddraw.setFontFamily("Arial")
+      stddraw.setFontSize(20)
+      stddraw.text(button_x + button_width / 2, button_y + button_height / 2, "Pause")
+
+      if stddraw.mousePressed():
+         mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY() #get the coordinates of mouse that has been clicked
+         # check if these coordinates are inside the pause button
+         if mouse_x >= 13.5 and mouse_x <= 14.5:
+            if mouse_y >= 10.5 and mouse_y <= 11.5:
+               self.pause_screen(self.grid_width, self.grid_height)
 
 
 
@@ -60,6 +81,10 @@ class GameGrid:
          stddraw.show(200)
       if (self.player.getDiff() == 2):
          stddraw.show(125)
+
+
+
+
 
    # A method for drawing the cells and the lines of the game grid
 
@@ -189,3 +214,53 @@ class GameGrid:
 
       # return the value of the game_over flag
       return self.game_over
+
+
+   def pause_screen(self, grid_width, grid_height):
+      background_color = Color(42, 69, 99)
+      button_color = Color(25, 255, 228)
+      text_color = Color(31, 160, 239)
+      button_width = 5
+      button_height = 2
+      continue_button_center_x = grid_width / 2 + 3
+      continue_button_center_y = grid_height / 2 + 3
+      exit_button_center_x = grid_width / 2 + 3
+      exit_button_center_y = grid_height / 2 - 3
+
+      # Draw the pause menu background
+      stddraw.clear(background_color)
+
+      # Draw the "Continue" button
+      stddraw.setPenColor(button_color)
+      stddraw.filledRectangle(continue_button_center_x - button_width / 2, continue_button_center_y - button_height / 2,
+                           button_width, button_height)
+      stddraw.setPenColor(text_color)
+      stddraw.text(continue_button_center_x, continue_button_center_y, "Continue")
+
+      # Draw the "Exit" button
+      stddraw.setPenColor(button_color)
+      stddraw.filledRectangle(exit_button_center_x - button_width / 2, exit_button_center_y - button_height / 2,
+                           button_width, button_height)
+      stddraw.setPenColor(text_color)
+      stddraw.text(exit_button_center_x, exit_button_center_y, "Exit")
+
+      # Display everything drawn to the screen
+      stddraw.show()
+
+      # Wait for user interaction
+      while True:
+         if stddraw.mousePressed():
+            mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY()
+            # Check if "Continue" button is clicked
+            if (continue_button_center_x - button_width / 2 <= mouse_x <= continue_button_center_x + button_width / 2) and \
+                  (
+                         continue_button_center_y - button_height / 2 <= mouse_y <= continue_button_center_y + button_height / 2):
+               break  # Exit the pause screen and resume the game
+            # Check if "Exit" button is clicked
+            if (exit_button_center_x - button_width / 2 <= mouse_x <= exit_button_center_x + button_width / 2) and \
+                 (exit_button_center_y - button_height / 2 <= mouse_y <= exit_button_center_y + button_height / 2):
+               self.game_over = True  # Set the game to end
+               break  # Exit the pause screen
+
+
+
