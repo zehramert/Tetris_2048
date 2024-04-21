@@ -330,6 +330,10 @@ def display_game_over_menu(grid_height, grid_width, grid):
       # Score Text
       stddraw.setPenColor(Color(255, 255, 255))
       stddraw.text(img_center_x, 12, "SCORE: " + str(grid.score))
+      if grid.score < 2048:
+         stddraw.setPenColor(Color(255, 255, 255))
+         stddraw.setFontSize(40)  # Adjust font size
+         stddraw.text(img_center_x, 10, "YOU LOSE!")
       # Changing Font Size for Button Texts
       stddraw.setFontSize(35)
       # Restart Button
