@@ -1,3 +1,4 @@
+
 import lib.stddraw as stddraw  # used for displaying the game grid
 from lib.color import Color  # used for coloring the game grid
 from point import Point  # used for tile positions
@@ -59,8 +60,8 @@ class GameGrid:
       if stddraw.mousePressed():
          mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY() #get the coordinates of mouse that has been clicked
          # check if these coordinates are inside the pause button
-         if mouse_x >= 13.5 and mouse_x <= 14.5:
-            if mouse_y >= 10.5 and mouse_y <= 11.5:
+         if mouse_x >= button_x - button_width/2 and mouse_x <= button_x + button_width/2:
+            if mouse_y >= button_y - button_height/2 and mouse_y <= button_y + button_height/2:
                self.pause_screen(self.grid_width, self.grid_height)
 
 
@@ -223,9 +224,12 @@ class GameGrid:
       button_width = 5
       button_height = 2
       continue_button_center_x = grid_width / 2 + 3
-      continue_button_center_y = grid_height / 2 + 3
+      continue_button_center_y = grid_height / 2 + 5
+      restart_button_center_x = grid_width / 2 + 3
+      restart_button_center_y = grid_height / 2
       exit_button_center_x = grid_width / 2 + 3
-      exit_button_center_y = grid_height / 2 - 3
+      exit_button_center_y = grid_height / 2 -5
+
 
       # Draw the pause menu background
       stddraw.clear(background_color)
@@ -237,6 +241,13 @@ class GameGrid:
       stddraw.setPenColor(text_color)
       stddraw.text(continue_button_center_x, continue_button_center_y, "Continue")
 
+      # Draw the "Restart" button
+      stddraw.setPenColor(button_color)
+      stddraw.filledRectangle(restart_button_center_x - button_width / 2, restart_button_center_y - button_height / 2,
+                              button_width, button_height)
+      stddraw.setPenColor(text_color)
+      stddraw.text(restart_button_center_x, restart_button_center_y, "Restart")
+
       # Draw the "Exit" button
       stddraw.setPenColor(button_color)
       stddraw.filledRectangle(exit_button_center_x - button_width / 2, exit_button_center_y - button_height / 2,
@@ -244,11 +255,10 @@ class GameGrid:
       stddraw.setPenColor(text_color)
       stddraw.text(exit_button_center_x, exit_button_center_y, "Exit")
 
-      # Display everything drawn to the screen
-      stddraw.show()
 
-      # Wait for user interaction
+
       while True:
+         stddraw.show(50)
          if stddraw.mousePressed():
             mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY()
             # Check if "Continue" button is clicked
@@ -256,11 +266,18 @@ class GameGrid:
                   (
                          continue_button_center_y - button_height / 2 <= mouse_y <= continue_button_center_y + button_height / 2):
                break  # Exit the pause screen and resume the game
+
+            # Check if "Restart" button is clicked
+            if (restart_button_center_x - button_width / 2 <= mouse_x <= restart_button_center_x + button_width / 2) and \
+                    (restart_button_center_y - button_height / 2 <= mouse_y <= restart_button_center_y + button_height / 2):
+                break;
+
+
             # Check if "Exit" button is clicked
             if (exit_button_center_x - button_width / 2 <= mouse_x <= exit_button_center_x + button_width / 2) and \
                  (exit_button_center_y - button_height / 2 <= mouse_y <= exit_button_center_y + button_height / 2):
                self.game_over = True  # Set the game to end
-               break  # Exit the pause screen
+               break 
 
 
 

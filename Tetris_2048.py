@@ -532,6 +532,70 @@ def rearrange_min_equivalent_labels(min_equivalent_labels):
       min_equivalent_labels[ind] = new_label
 
 
+
+   def pause_screen(self, grid_width, grid_height):
+      background_color = Color(42, 69, 99)
+      button_color = Color(25, 255, 228)
+      text_color = Color(31, 160, 239)
+      button_width = 5
+      button_height = 2
+      continue_button_center_x = grid_width / 2 + 3
+      continue_button_center_y = grid_height / 2 + 5
+      restart_button_center_x = grid_width / 2 + 3
+      restart_button_center_y = grid_height / 2
+      exit_button_center_x = grid_width / 2 + 3
+      exit_button_center_y = grid_height / 2 -5
+
+
+      # Draw the pause menu background
+      stddraw.clear(background_color)
+
+      # Draw the "Continue" button
+      stddraw.setPenColor(button_color)
+      stddraw.filledRectangle(continue_button_center_x - button_width / 2, continue_button_center_y - button_height / 2,
+                           button_width, button_height)
+      stddraw.setPenColor(text_color)
+      stddraw.text(continue_button_center_x, continue_button_center_y, "Continue")
+
+      # Draw the "Restart" button
+      stddraw.setPenColor(button_color)
+      stddraw.filledRectangle(restart_button_center_x - button_width / 2, restart_button_center_y - button_height / 2,
+                              button_width, button_height)
+      stddraw.setPenColor(text_color)
+      stddraw.text(restart_button_center_x, restart_button_center_y, "Restart")
+
+      # Draw the "Exit" button
+      stddraw.setPenColor(button_color)
+      stddraw.filledRectangle(exit_button_center_x - button_width / 2, exit_button_center_y - button_height / 2,
+                           button_width, button_height)
+      stddraw.setPenColor(text_color)
+      stddraw.text(exit_button_center_x, exit_button_center_y, "Exit")
+
+
+
+      while True:
+         stddraw.show(50)
+         if stddraw.mousePressed():
+            mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY()
+            # Check if "Continue" button is clicked
+            if (continue_button_center_x - button_width / 2 <= mouse_x <= continue_button_center_x + button_width / 2) and \
+                  (
+                         continue_button_center_y - button_height / 2 <= mouse_y <= continue_button_center_y + button_height / 2):
+               break  # Exit the pause screen and resume the game
+
+            # Check if "Restart" button is clicked
+            if (restart_button_center_x - button_width / 2 <= mouse_x <= restart_button_center_x + button_width / 2) and \
+                    (restart_button_center_y - button_height / 2 <= mouse_y <= restart_button_center_y + button_height / 2):
+               self.update()
+
+
+            # Check if "Exit" button is clicked
+            if (exit_button_center_x - button_width / 2 <= mouse_x <= exit_button_center_x + button_width / 2) and \
+                 (exit_button_center_y - button_height / 2 <= mouse_y <= exit_button_center_y + button_height / 2):
+               grid.game_over = True  # Set the game to end
+               break  # Exit the pause screen
+
+
 # start() function is specified as the entry point (main function) from which
 # the program starts execution
 
