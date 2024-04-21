@@ -1,6 +1,8 @@
 import lib.stddraw as stddraw  # used for drawing the tiles to display them
 from lib.color import Color  # used for coloring the tiles
 import random as rd
+from point import Point
+
 
 # A class for modeling numbered tiles as in 2048
 class Tile:
@@ -13,6 +15,7 @@ class Tile:
 
    # A constructor that creates a tile with 2 or 4 (with 50% probability) as the number on it
    def __init__(self):
+
       # set the number on this tile
       if (rd.random() < 0.5):
          self.number = 2
@@ -32,6 +35,11 @@ class Tile:
          self.foreground_color = Color(138, 129, 120)
       self.box_color = Color(156, 146, 136) # box (boundary) color
 
+      self.position = Point()
+   def move(self, dx, dy):
+
+      self.position.x += dx
+      self.position.y += dy
 
 
 
