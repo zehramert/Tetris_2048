@@ -16,6 +16,7 @@ import random  # used for creating tetrominoes with random types (shapes)
 import numpy as np
 from point import Point # used for tile positions
 from tile import Tile  # used for modeling each tile on the tetrominoes
+import pygame as pg # ONLY FOR MUSICS AND SOUND EFFECTS
 
 # The main function where this program starts execution
 def start():
@@ -47,6 +48,15 @@ def update(grid):
    next_tetromino = create_tetromino()
    grid.current_tetromino = current_tetromino
    grid.next_tetromino = next_tetromino
+   # Initializing Game Music
+   current_dir = os.path.dirname(os.path.realpath(__file__))
+   game_music_file = current_dir + "/sounds/tetris-theme.wav"
+   pg.mixer.init()
+   pg.mixer.music.load(game_music_file)
+   pg.mixer.music.set_volume(grid.player.getVolume() / 100)
+   if (grid.player.getMusicCondition()):
+      # Playing Menu Music Forever
+      pg.mixer.music.play(-1)
    # the main game loop
    while True:
       # check for any user interaction via the keyboard
@@ -175,6 +185,14 @@ def display_game_menu(grid):
    image_to_display = Picture(img_file)
    # add the image to the drawing canvas
    stddraw.picture(image_to_display, img_center_x, img_center_y)
+   # Initializing Menu Music
+   menu_music_file = current_dir + "/sounds/menu-music.wav"
+   pg.mixer.init()
+   pg.mixer.music.load(menu_music_file)
+   pg.mixer.music.set_volume(grid.player.getVolume() / 100)
+   # Playing Menu Music Forever
+   if (grid.player.getMusicCondition()):
+      pg.mixer.music.play(-1)
    # the dimensions for the start game button
    button_w, button_h = grid_width - 1.5, 2
    # the coordinates of the bottom left corner for the start game button
@@ -207,11 +225,15 @@ def display_game_menu(grid):
          # check if these coordinates are inside the settings button
          if mouse_x >= s_button_blc_x and mouse_x <= s_button_blc_x + s_button_w:
             if mouse_y >= s_button_blc_y and mouse_y <= s_button_blc_y + s_button_h:
+               # Initializing and Playing Click Sound
+               playClickSound(grid.player)
                display_settings_menu(grid) # Opens the settings page
-               display_settings_menu(grid)
          # check if these coordinates are inside the start button
          if mouse_x >= button_blc_x and mouse_x <= button_blc_x + button_w:
             if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h:
+               pg.mixer.music.stop()
+               # Initializing and Playing Click Sound
+               playClickSound(grid.player)
                update(grid)  # break the loop to end the method and start the game
 
 # A function for displaying a settings menu before starting the game
@@ -224,6 +246,8 @@ def display_settings_menu(grid):
    background_color = Color(42, 69, 99)
    button_color = Color(25, 255, 228)
    text_color = Color(31, 160, 239)
+   # get the directory in which this python code file is placed
+   current_dir = os.path.dirname(os.path.realpath(__file__))
    while True:
       # clear the background drawing canvas to background_color
       stddraw.clear(background_color)
@@ -289,20 +313,28 @@ def display_settings_menu(grid):
          # check if these coordinates are inside the music volume increase button
          if mouse_x >= img_center_x + 7 and mouse_x <= img_center_x + 7 + 2:
             if mouse_y >= 14 and mouse_y <= 15.3:
+               # Initializing and Playing Click Sound
+               playClickSound(grid.player)
                player.increaseVolume(5)
          # check if these coordinates are inside the music volume decrease button
          if mouse_x >= img_center_x + 5 and mouse_x <= img_center_x + 6:
             if mouse_y >= 14 and mouse_y <= 15.3:
+               # Initializing and Playing Click Sound
+               playClickSound(grid.player)
                player.decreaseVolume(5)
          # check if these coordinates are inside the difficulty right button
          if mouse_x >= img_center_x + 7.5 and mouse_x <= img_center_x + 8:
             if mouse_y >= 10 and mouse_y <= 11:
                if (player.getDiff() <= 1):
+                  # Initializing and Playing Click Sound
+                  playClickSound(grid.player)
                   player.setDiff(player.getDiff() + 1)
          # check if these coordinates are inside the difficulty left button
          if mouse_x >= img_center_x + 4.5 and mouse_x <= img_center_x + 5:
             if mouse_y >= 10 and mouse_y <= 11:
                if (player.getDiff() >= 1):
+                  # Initializing and Playing Click Sound
+                  playClickSound(grid.player)
                   player.setDiff(player.getDiff() - 1)
          # check if these coordinates are inside the music on-off button
          if mouse_x >= img_center_x + 6 and mouse_x <= img_center_x + 6 + 2:
@@ -310,10 +342,14 @@ def display_settings_menu(grid):
                if (player.getMusicCondition()):
                   player.turnMusicOff()
                else:
+                  # Initializing and Playing Click Sound
+                  playClickSound(grid.player)
                   player.turnMusicOn()
          # check if these coordinates are inside the start button
          if mouse_x >= b_button_blc_x and mouse_x <= b_button_blc_x + b_button_w:
             if mouse_y >= b_button_blc_y and mouse_y <= b_button_blc_y + b_button_h:
+               # Initializing and Playing Click Sound
+               playClickSound(grid.player)
                player.updateOnClose()
                update(grid)
       # display the menu and wait for a short time (50 ms)
@@ -327,6 +363,8 @@ def display_game_over_menu(grid):
    background_color = Color(42, 69, 99)
    button_color = Color(25, 255, 228)
    text_color = Color(31, 160, 239)
+   # Initializing and Playing Game Over Sound
+   playGameOverSound(grid.player)
    while True:
       # clear the background drawing canvas to background_color
       stddraw.clear(background_color)
@@ -372,14 +410,20 @@ def display_game_over_menu(grid):
          # check if these coordinates are inside the restart button
          if mouse_x >= img_center_x - 7 and mouse_x <= img_center_x -3:
             if mouse_y >= 3 and mouse_y <= 5:
+               # Initializing and Playing Click Sound
+               playClickSound(grid.player)
                update(grid)
          # check if these coordinates are inside the main menu button
          if mouse_x >= img_center_x -2 and mouse_x <= img_center_x + 2:
             if mouse_y >= 3 and mouse_y <= 5:
+               # Initializing and Playing Click Sound
+               playClickSound(grid.player)
                display_game_menu(grid)
          # check if these coordinates are inside the settings button
          if mouse_x >= img_center_x + 3 and mouse_x <= img_center_x + 7:
             if mouse_y >= 3 and mouse_y <= 5:
+               # Initializing and Playing Click Sound
+               playClickSound(grid.player)
                display_settings_menu(grid)
       # display the menu and wait for a short time (50 ms)
       stddraw.show(50)
@@ -548,6 +592,28 @@ def rearrange_min_equivalent_labels(min_equivalent_labels):
       old_label = min_equivalent_labels[ind]
       new_label = new_labels[old_label]
       min_equivalent_labels[ind] = new_label
+
+def playClickSound(player):
+   current_dir = os.path.dirname(os.path.realpath(__file__))
+   # Initializing Click Sound
+   click_sound_file = current_dir + "/sounds/tetris-click-sound.wav"
+   pg.mixer.init()
+   pg.mixer.music.load(click_sound_file)
+   pg.mixer.music.set_volume(player.getVolume() / 100)
+   # Playing Sound Once
+   if (player.getMusicCondition()):
+      pg.mixer.music.play()
+
+def playGameOverSound(player):
+   current_dir = os.path.dirname(os.path.realpath(__file__))
+   # Initializing Click Sound
+   game_over_sound_file = current_dir + "/sounds/tetris-game-over.wav"
+   pg.mixer.init()
+   pg.mixer.music.load(game_over_sound_file)
+   pg.mixer.music.set_volume(player.getVolume() / 100)
+   # Playing Sound Once
+   if (player.getMusicCondition()):
+      pg.mixer.music.play()
 
 
 
