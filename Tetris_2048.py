@@ -395,7 +395,7 @@ def display_game_over_menu(grid):
          stddraw.setPenColor(Color(255, 255, 255))
          stddraw.setFontSize(40)
          stddraw.text(img_center_x, 10, "YOU LOSE!")
-      elif grid.score >= 2048:
+      elif grid.score >= 2048 or grid.win_condition_met:
          stddraw.setPenColor(Color(255, 255, 255))
          stddraw.setFontSize(40)
          stddraw.text(img_center_x, 10, "YOU WIN!")
