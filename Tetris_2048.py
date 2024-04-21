@@ -114,7 +114,7 @@ def update(grid):
          if game_over:
             break
          # check for merges when tetromino stopped
-         apply_merge_2(grid)
+         apply_merge(grid)
          grid.clear_tiles()
          # Assigning the next tetromino to current tetromino to be able to draw it on the game grid
          current_tetromino = grid.next_tetromino
@@ -501,10 +501,10 @@ def shift_down_free_tiles(grid):
                grid.tile_matrix[r][c].position = (r, c-1)
 
 
-def apply_merge_2(grid):
+def apply_merge(grid):
     height = grid.grid_height
     width = grid.grid_width
-    merged = False  # Flag to track if any merging occurred
+    merged = False
     while True:
         # Flag to track if any merging occurred in this iteration
         merged_this_iteration = False
@@ -533,10 +533,12 @@ def apply_merge_2(grid):
                 if grid.tile_matrix[row][column].number == grid.tile_matrix[row + 1][column].number:
                     # Double the number of the current tile
                     grid.tile_matrix[row][column].number *= 2
+                    # Increase score
+                    grid.score += grid.tile_matrix[row][column].number
                     # Remove the tile below
                     grid.tile_matrix[row + 1][column] = None
                     # Update color if necessary
-                    updateColor(grid.tile_matrix[row][column], grid.tile_matrix[row][column].number * 2)
+                    updateColor(grid.tile_matrix[row][column], grid.tile_matrix[row][column].number)
                     merged_this_iteration = True  # Set the flag to True
                     row += 1
                 else:
@@ -544,38 +546,13 @@ def apply_merge_2(grid):
         # If no merging or movement occurred in this iteration, break the loop
         if not moved_down and not merged_this_iteration:
             break
-        # Update the merged flag
         merged = True
-
-
-
-def apply_merge(grid):
-      height = len(grid.tile_matrix)
-      width = len(grid.tile_matrix[0])
-      merged = False
-
-      for y  in range(width):
-          x = 0
-          while x < height -1 :
-             if grid.tile_matrix[x][y] != None and grid.tile_matrix[x + 1][y] != None:
-                if grid.tile_matrix[x][y].number == grid.tile_matrix[x + 1][y].number:
-                   # Merge the tiles
-                   grid.tile_matrix[x][y].number += grid.tile_matrix[x + 1][y].number
-                   grid.score += grid.tile_matrix[x][y].number
-                   grid.tile_matrix[x + 1][y].number = None
-                   grid.tile_matrix[x + 1][y] = None
-                   merged  = True
-                   updateColor(grid.tile_matrix[x][y],grid.tile_matrix[x][y].number)
-                   x += 1
-             x += 1
-             shift_down_free_tiles(grid)
-      return merged
 
 def updateColor(tile, num):
    colors = {
          2: (238, 228, 218),  # lightgray
-         4: (237, 224, 200),  # lightblue
-         8: (242, 177, 121),  # orange
+         4: (236, 224, 200),  # lightblue
+         8: (243, 177, 121),  # orange
          16: (245, 149, 99),  # coral
          32: (246, 124, 95),  # red
          64: (246, 94, 59),  # purple
@@ -586,7 +563,7 @@ def updateColor(tile, num):
          2048: (237, 194, 46),
       }
    if num in colors:
-      #update the colors by num value
+      # Update the colors by num value
       color = colors[num]
       tile.background_color = Color(color[0], color[1], color[2])
       tile.foreground_color = Color(138, 129, 120)

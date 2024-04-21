@@ -21,9 +21,8 @@ class Tile:
          self.number = 2
       else:
          self.number = 4
+
       # set the colors of this tile
-
-
       if (self.number == 2):
          self.background_color = Color(238, 228, 218) # background (tile) color
          self.foreground_color = Color(138, 129, 120)  # foreground (number) color
@@ -36,14 +35,10 @@ class Tile:
       self.box_color = Color(156, 146, 136) # box (boundary) color
 
       self.position = Point()
-   def move(self, dx, dy):
 
+   def move(self, dx, dy):
       self.position.x += dx
       self.position.y += dy
-
-
-
-
 
    # A method for drawing this tile at a given position with a given length
    def draw(self, position, length=1):  # length defaults to 1
@@ -62,10 +57,6 @@ class Tile:
       stddraw.text(position.x, position.y, str(self.number))
 
    # Setter for number property
-
-
-
-
    def setNumber(self, number):
       self.number = number
       # Numara değiştirildiğinde background_color ve foreground_color değişkenlerinin de değiştirilmesi gerekiyor bu metod içinde.
