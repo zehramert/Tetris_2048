@@ -60,19 +60,15 @@ def update(grid):
    # the main game loop
    music_paused = False
    while True:
-      if (music_paused):
-         pg.mixer.music.load(game_music_file)
-         pg.mixer.music.play(-1)
-         music_paused = False
       if stddraw.mousePressed():
          mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY() #get the coordinates of mouse that has been clicked
          # check if these coordinates are inside the pause button
          if mouse_x >= 13.5 and mouse_x <= 15.5:
             if mouse_y >= 10.5 and mouse_y <= 11.5:
-               pg.mixer.music.pause()
-               music_paused = True
                playClickSound(grid.player)
+               pg.mixer.music.set_volume(0)
                display_pause_menu(grid)
+               pg.mixer.music.set_volume(grid.player.getVolume() / 100)
       # check for any user interaction via the keyboard
       if stddraw.hasNextKeyTyped():  # check if the user has pressed a key
          key_typed = stddraw.nextKeyTyped()  # the most recently pressed key
@@ -330,12 +326,14 @@ def display_settings_menu(grid):
                # Initializing and Playing Click Sound
                playClickSound(grid.player)
                player.increaseVolume(5)
+               pg.mixer.music.set_volume(grid.player.getVolume() / 100)
          # check if these coordinates are inside the music volume decrease button
          if mouse_x >= img_center_x + 5 and mouse_x <= img_center_x + 6:
             if mouse_y >= 14 and mouse_y <= 15.3:
                # Initializing and Playing Click Sound
                playClickSound(grid.player)
                player.decreaseVolume(5)
+               pg.mixer.music.set_volume(grid.player.getVolume() / 100)
          # check if these coordinates are inside the difficulty right button
          if mouse_x >= img_center_x + 7.5 and mouse_x <= img_center_x + 8:
             if mouse_y >= 10 and mouse_y <= 11:
@@ -355,10 +353,12 @@ def display_settings_menu(grid):
             if mouse_y >= 12 and mouse_y <= 14:
                if (player.getMusicCondition()):
                   player.turnMusicOff()
+                  pg.mixer.music.set_volume(0)
                else:
                   # Initializing and Playing Click Sound
                   playClickSound(grid.player)
                   player.turnMusicOn()
+                  pg.mixer.music.set_volume(grid.player.getVolume() / 100)
          # check if these coordinates are inside the start button
          if mouse_x >= b_button_blc_x and mouse_x <= b_button_blc_x + b_button_w:
             if mouse_y >= b_button_blc_y and mouse_y <= b_button_blc_y + b_button_h:
@@ -612,11 +612,11 @@ def playClickSound(player):
    # Initializing Click Sound
    click_sound_file = current_dir + "/sounds/tetris-click-sound.wav"
    pg.mixer.init()
-   pg.mixer.music.load(click_sound_file)
-   pg.mixer.music.set_volume(player.getVolume() / 100)
+   click = pg.mixer.Sound(click_sound_file)
+   click.set_volume(player.getVolume() / 100)
    # Playing Sound Once
    if (player.getMusicCondition()):
-      pg.mixer.music.play()
+      click.play()
 
 def playGameOverSound(player):
    current_dir = os.path.dirname(os.path.realpath(__file__))
