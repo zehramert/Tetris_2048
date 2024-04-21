@@ -35,16 +35,19 @@ def start():
    Tetromino.grid_width = grid_w
    # create the game grid
    grid = GameGrid(grid_h, grid_w)
+   # display a simple menu before opening the game
+   # by using the display_game_menu function defined below
+   display_game_menu(grid_h, grid_w, grid.player)
+   update(grid)
+
+def update(grid):
+   # Resetting grid
+   grid = GameGrid(grid.grid_height, grid.grid_width)
    # Creating the first and next tetromino and assigning them to appropriate variables
    current_tetromino = create_tetromino()
    next_tetromino = create_tetromino()
    grid.current_tetromino = current_tetromino
    grid.next_tetromino = next_tetromino
-
-   # display a simple menu before opening the game
-   # by using the display_game_menu function defined below
-   display_game_menu(grid_h, grid_w, grid.player)
-
    # the main game loop
    while True:
       # check for any user interaction via the keyboard
@@ -76,9 +79,8 @@ def start():
 
       # move the active tetromino down by one at each iteration (auto fall)
       success = current_tetromino.move("down", grid)
+
       # lock the active tetromino onto the grid when it cannot go down anymore
-
-
       if not success:
          # get the tile matrix of the tetromino without empty rows and columns
          # and the position of the bottom left cell in this matrix
@@ -86,17 +88,11 @@ def start():
          # update the game grid by locking the tiles of the landed tetromino
          game_over = grid.update_grid(tiles, pos)
          # end the main game loop if the game is over
-
-
-
          if game_over:
             break
-
-
          merge = apply_merge(grid)
          if merge == True:
             print("merge applied")
-
          grid.clear_tiles()
          # Assigning the next tetromino to current tetromino to be able to draw it on the game grid
          current_tetromino = grid.next_tetromino
@@ -140,14 +136,13 @@ def start():
       # display the game grid with the current tetromino
       grid.display()
 
-
    # Updating high score after game is over
    if (grid.score > grid.player.getHighScore()):
       grid.player.setHighScore(grid.score)
    # Updating save file
    grid.player.updateOnClose()
    # print a message on the console when the game is over
-   display_game_over_menu(grid_h, grid_w, grid.player, grid)
+   display_game_over_menu(grid.grid_height, grid.grid_width, grid)
 
 
 # A function for creating random shaped tetrominoes to enter the game grid
@@ -318,7 +313,7 @@ def display_settings_menu(grid_height, grid_width, player):
       stddraw.show(50)
    player.updateOnClose()
 
-def display_game_over_menu(grid_height, grid_width, player, grid):
+def display_game_over_menu(grid_height, grid_width, grid):
    # the colors used for the menu
    background_color = Color(42, 69, 99)
    button_color = Color(25, 255, 228)
@@ -360,7 +355,7 @@ def display_game_over_menu(grid_height, grid_width, player, grid):
          # check if these coordinates are inside the restart button
          if mouse_x >= img_center_x - 7 and mouse_x <= img_center_x -3:
             if mouse_y >= 3 and mouse_y <= 5:
-               print("pressed")
+               update(grid)
          # check if these coordinates are inside the main menu button
          if mouse_x >= img_center_x -2 and mouse_x <= img_center_x + 2:
             if mouse_y >= 3 and mouse_y <= 5:
