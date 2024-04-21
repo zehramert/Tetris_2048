@@ -114,9 +114,7 @@ def update(grid):
          if game_over:
             break
          # check for merges when tetromino stopped
-         merge = apply_merge(grid)
-         if merge == True:
-            print("merge applied")  # for checking
+         apply_merge_2(grid)
          grid.clear_tiles()
          # Assigning the next tetromino to current tetromino to be able to draw it on the game grid
          current_tetromino = grid.next_tetromino
@@ -489,6 +487,68 @@ def search_free_tiles(grid_h, grid_w, labels, free_tiles):
                   counter += 1
    return free_tiles, counter
 
+def shift_down_free_tiles(grid):
+   for r in range(grid.grid_height):
+      for c in range(grid.grid_width):
+         if c == 0 and r - 1 >= 0:
+            if grid.tile_matrix[r - 1][c] is None and grid.tile_matrix[r][c + 1] is None and grid.tile_matrix[r][c] is not None:
+               grid.tile_matrix[r][c].position = (r, c-1)
+         elif c == grid.grid_width - 1:
+            if grid.tile_matrix[r - 1][c] is None and grid.tile_matrix[r][c - 1] is None and grid.tile_matrix[r][c] is not None:
+               grid.tile_matrix[r][c].position = (r, c-1)
+         else:
+            if grid.tile_matrix[r - 1][c] is None and grid.tile_matrix[r][c - 1] is None and grid.tile_matrix[r][c + 1] is None and grid.tile_matrix[r][c] is not None:
+               grid.tile_matrix[r][c].position = (r, c-1)
+
+
+def apply_merge_2(grid):
+    height = grid.grid_height
+    width = grid.grid_width
+    merged = False  # Flag to track if any merging occurred
+    while True:
+        # Flag to track if any merging occurred in this iteration
+        merged_this_iteration = False
+        # Iterate over each column
+        for column in range(width):
+            # Flag to track if any tile was moved down in this column
+            moved_down = False
+            # Iterate over each row from top to bottom
+            for row in range(1, height):
+                # Skip if the current tile is empty
+                if grid.tile_matrix[row][column] is None:
+                    continue
+                # If the tile below is empty, move the current tile down
+                if grid.tile_matrix[row - 1][column] is None:
+                    grid.tile_matrix[row - 1][column] = grid.tile_matrix[row][column]
+                    grid.tile_matrix[row][column] = None
+                    moved_down = True
+            # Merge tiles in this column
+            row = 0
+            while row < height - 1:
+                # Skip if the current tile or the tile below is empty
+                if grid.tile_matrix[row][column] is None or grid.tile_matrix[row + 1][column] is None:
+                    row += 1
+                    continue
+                # Merge vertically if the tile below has the same number
+                if grid.tile_matrix[row][column].number == grid.tile_matrix[row + 1][column].number:
+                    # Double the number of the current tile
+                    grid.tile_matrix[row][column].number *= 2
+                    # Remove the tile below
+                    grid.tile_matrix[row + 1][column] = None
+                    # Update color if necessary
+                    updateColor(grid.tile_matrix[row][column], grid.tile_matrix[row][column].number * 2)
+                    merged_this_iteration = True  # Set the flag to True
+                    row += 1
+                else:
+                    row += 1
+        # If no merging or movement occurred in this iteration, break the loop
+        if not moved_down and not merged_this_iteration:
+            break
+        # Update the merged flag
+        merged = True
+
+
+
 def apply_merge(grid):
       height = len(grid.tile_matrix)
       width = len(grid.tile_matrix[0])
@@ -508,7 +568,9 @@ def apply_merge(grid):
                    updateColor(grid.tile_matrix[x][y],grid.tile_matrix[x][y].number)
                    x += 1
              x += 1
+             shift_down_free_tiles(grid)
       return merged
+
 def updateColor(tile, num):
    colors = {
          2: (238, 228, 218),  # lightgray
