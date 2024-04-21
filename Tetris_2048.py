@@ -58,7 +58,21 @@ def update(grid):
       # Playing Menu Music Forever
       pg.mixer.music.play(-1)
    # the main game loop
+   music_paused = False
    while True:
+      if (music_paused):
+         pg.mixer.music.load(game_music_file)
+         pg.mixer.music.play(-1)
+         music_paused = False
+      if stddraw.mousePressed():
+         mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY() #get the coordinates of mouse that has been clicked
+         # check if these coordinates are inside the pause button
+         if mouse_x >= 13.5 and mouse_x <= 15.5:
+            if mouse_y >= 10.5 and mouse_y <= 11.5:
+               pg.mixer.music.pause()
+               music_paused = True
+               playClickSound(grid.player)
+               display_pause_menu(grid)
       # check for any user interaction via the keyboard
       if stddraw.hasNextKeyTyped():  # check if the user has pressed a key
          key_typed = stddraw.nextKeyTyped()  # the most recently pressed key
@@ -613,9 +627,9 @@ def playGameOverSound(player):
    if (player.getMusicCondition()):
       pg.mixer.music.play()
 
-
-
-   def pause_screen(self, grid_width, grid_height):
+def display_pause_menu(grid):
+      grid_width = grid.grid_width
+      grid_height = grid.grid_height
       background_color = Color(42, 69, 99)
       button_color = Color(25, 255, 228)
       text_color = Color(31, 160, 239)
@@ -627,7 +641,6 @@ def playGameOverSound(player):
       restart_button_center_y = grid_height / 2
       exit_button_center_x = grid_width / 2 + 3
       exit_button_center_y = grid_height / 2 -5
-
 
       # Draw the pause menu background
       stddraw.clear(background_color)
@@ -653,8 +666,6 @@ def playGameOverSound(player):
       stddraw.setPenColor(text_color)
       stddraw.text(exit_button_center_x, exit_button_center_y, "Exit")
 
-
-
       while True:
          stddraw.show(50)
          if stddraw.mousePressed():
@@ -663,19 +674,19 @@ def playGameOverSound(player):
             if (continue_button_center_x - button_width / 2 <= mouse_x <= continue_button_center_x + button_width / 2) and \
                   (
                          continue_button_center_y - button_height / 2 <= mouse_y <= continue_button_center_y + button_height / 2):
+               playClickSound(grid.player)
                break  # Exit the pause screen and resume the game
-
             # Check if "Restart" button is clicked
             if (restart_button_center_x - button_width / 2 <= mouse_x <= restart_button_center_x + button_width / 2) and \
                     (restart_button_center_y - button_height / 2 <= mouse_y <= restart_button_center_y + button_height / 2):
-               self.update()
-
-
+               playClickSound(grid.player)
+               update(grid)
             # Check if "Exit" button is clicked
             if (exit_button_center_x - button_width / 2 <= mouse_x <= exit_button_center_x + button_width / 2) and \
                  (exit_button_center_y - button_height / 2 <= mouse_y <= exit_button_center_y + button_height / 2):
+               playClickSound(grid.player)
                grid.game_over = True  # Set the game to end
-               break  # Exit the pause screen
+               display_game_menu(grid) # Exit the pause screen
 
 
 # start() function is specified as the entry point (main function) from which
