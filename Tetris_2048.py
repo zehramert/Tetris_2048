@@ -66,6 +66,11 @@ def start():
          elif key_typed == "r" or key_typed == "up":
             # Rotates the tetromino when R key or up key pressed
             current_tetromino.rotate(grid)
+         elif key_typed == "space":
+            # hard drop: causes the tetromino to fall down to the bottom
+            while current_tetromino.can_be_moved("down", grid):
+               current_tetromino.move("down", grid)
+
          # clear the queue of the pressed keys for a smoother interaction
          stddraw.clearKeysTyped()
 
