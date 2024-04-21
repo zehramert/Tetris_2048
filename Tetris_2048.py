@@ -117,9 +117,10 @@ def update(grid):
          # end the main game loop if the game is over
          if game_over:
             break
+         # check for merges when tetromino stopped
          merge = apply_merge(grid)
          if merge == True:
-            print("merge applied")
+            print("merge applied")  # for checking
          grid.clear_tiles()
          # Assigning the next tetromino to current tetromino to be able to draw it on the game grid
          current_tetromino = grid.next_tetromino
@@ -523,6 +524,7 @@ def updateColor(tile, num):
          2048: (237, 194, 46),
       }
    if num in colors:
+      #update the colors by num value
       color = colors[num]
       tile.background_color = Color(color[0], color[1], color[2])
       tile.foreground_color = Color(138, 129, 120)
