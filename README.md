@@ -15,6 +15,16 @@ Event Handling: Processes input from the mouse and keyboard to control game elem
 * Use space for hard drop.
 
 
+<img src="https://github.com/zehramert/Tetris_2048/blob/main/Screenshot%202024-05-01%20at%2021.46.16.png" alt="" width="320">  <img src="https://github.com/zehramert/Tetris_2048/blob/main/Screenshot%202024-05-01%20at%2021.46.26.png" alt="" width="320">
+
+<img src="https://github.com/zehramert/Tetris_2048/blob/main/Screenshot%202024-05-01%20at%2021.46.49.png" alt="" width="640">
+
+<img src="https://github.com/zehramert/Tetris_2048/blob/main/Screenshot%202024-05-01%20at%2021.47.29.png" alt="" width="320"> <img src="https://github.com/zehramert/Tetris_2048/blob/main/Screenshot%202024-05-01%20at%2021.47.13.png" alt="" width="320">
+
+
+
+
+
 
 
 
