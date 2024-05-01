@@ -10,8 +10,11 @@ Settings and Customizations: Allows players to adjust volume, select music on/of
 Event Handling: Processes input from the mouse and keyboard to control game elements and navigate menus.
 
 ### Usage:
-Use arrow keys to control falling tetrominoes.
-Use up arrow key for rotate tetrominoes.
-Use space for hard drop.
+* Use arrow keys to control falling tetrominoes.
+* Use up arrow key for rotate tetrominoes.
+* Use space for hard drop.
+
+
+
 
 
